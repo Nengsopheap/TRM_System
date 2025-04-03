@@ -1,6 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Question } from './question.entity';
 import { Option } from './option.entity';
+import { User } from 'src/users/entity/users.entity'; 
 
 @Entity()
 export class Answer {
@@ -12,6 +19,10 @@ export class Answer {
 
   @ManyToOne(() => Option, (option) => option.answers)
   option: Option;
+
+  @ManyToOne(() => Option, (option) => option.answers)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column()
   is_correct: boolean;

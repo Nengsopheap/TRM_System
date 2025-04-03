@@ -6,9 +6,13 @@ import { Option } from './entity/option.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Answer } from './entity/submit_answer_entity';
 import { Assessment } from './../assessment/entity/assessment.entity';
+import { User } from 'src/users/entity/users.entity';
+import { UserScore } from 'src/users/entity/user_score.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Question, Option, Answer ,Assessment])], 
+  imports: [
+    TypeOrmModule.forFeature([Question, Option, Answer, Assessment, User, UserScore]),
+  ],
   controllers: [QuestionsController],
   providers: [QuestionsService],
 })

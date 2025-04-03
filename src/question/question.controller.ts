@@ -3,8 +3,10 @@ import { QuestionsService } from './question.service';
 import { CreateQuestionDto } from './dtos/create_question.dto';
 import { SubmitAnswerDto } from './dtos/submit_answer.dto';
 import { Question } from './entity/question.entity';
+import { User } from 'src/users/entity/users.entity';
 
 import { UsePipes, ValidationPipe } from '@nestjs/common';
+// import { User } from 'src/users/entity/users.entity';
 
 @Controller('questions')
 export class QuestionsController {
@@ -20,9 +22,9 @@ export class QuestionsController {
   // Endpoint for submitting the answer
   @Post('submit-answer')
   async submitAnswer(
-    @Body() body: { question_id: number; option_id: number },
+    @Body() body: { question_id: number; option_id: number; user_id: number },
   ): Promise<any> {
-    const { question_id, option_id } = body;
-    return this.questionsService.submitAnswer(question_id, option_id);
+    const { question_id, option_id, user_id } = body;
+    return this.questionsService.submitAnswer(question_id, option_id, user_id);
   }
 }

@@ -2,7 +2,7 @@
 # Content-Type: application/json
 
 # {
-#   "email": "newuser96889@example.com",
+#   "email": "new6889@example.com",
 #   "password": "mypassword",
 #   "role": "admin"
 # }
@@ -14,6 +14,11 @@
 #   "email": "newuser96889@example.com",
 #   "password": "mypassword"
 # }
+
+# for list all user 
+
+# curl -X GET http://localhost:3000/users/all -H "Content-Type: application/json"
+
 
 # for create assessment
 # curl -X POST http://localhost:3000/assessments \
@@ -38,8 +43,9 @@
 # Content-Type: application/json
 
 # {
-#   "question_text": "What is the capital of France?",
+#   "question_text": "What is the capital of France168?",
 #   "assessment_id": 3, 
+#     "points": 5,
 #   "options": [
 #     { "option_text": "Paris", "is_correct": true },
 #     { "option_text": "Berlin", "is_correct": false },
@@ -48,9 +54,11 @@
 # }
 
 # submit answer test
-# curl -X POST http://localhost:3000/questions/submit-answer \
-#   -H "Content-Type: application/json" \
-#   -d '{
-#     "question_id": 5,
-#     "option_id": 3
-#   }'
+POST http://localhost:3000/questions/submit-answer
+Content-Type: application/json
+
+{
+  "user_id": 2,
+  "question_id": 20,
+  "option_id": 47
+}

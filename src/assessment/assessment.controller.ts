@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AssessmentsService } from './assessment.service';
 import { CreateAssessmentDto } from './dtos/create_assessment.dto';
@@ -60,5 +61,9 @@ export class AssessmentsController {
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<{ message: string }> {
     return await this.assessmentsService.remove(id);
+  }
+  @Get(':assessment_id/score')
+  async getScore(@Param('assessment_id', ParseIntPipe) assessment_id: number) {
+    return { total_score: await this.assessmentsService.calculateScore(assessment_id) };
   }
 }

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './users/entity/users.entity';
+import { UserScore } from './users/entity/user_score.entity';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auths/auths.module';
 import { AssessmentModule } from './assessment/assessment.module';
@@ -10,6 +11,7 @@ import { Assessment } from './assessment/entity/assessment.entity';
 import { Question } from './question/entity/question.entity';
 import { Option } from './question/entity/option.entity';
 import { Answer } from './question/entity/submit_answer_entity';
+
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { Answer } from './question/entity/submit_answer_entity';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'Pheap9999',
       database: process.env.DB_NAME || 'qcm_db',
-      entities: [User, Assessment, Question, Option, Answer],
+      entities: [User, Assessment, Question, Option, Answer, UserScore],
       synchronize: true,
     }),
     UsersModule,
