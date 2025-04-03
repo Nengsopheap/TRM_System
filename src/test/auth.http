@@ -1,0 +1,56 @@
+# POST http://localhost:3000/users/create
+# Content-Type: application/json
+
+# {
+#   "email": "newuser96889@example.com",
+#   "password": "mypassword",
+#   "role": "admin"
+# }
+
+# POST http://localhost:3000/auth/login
+# Content-Type: application/json
+
+# {
+#   "email": "newuser96889@example.com",
+#   "password": "mypassword"
+# }
+
+# for create assessment
+# curl -X POST http://localhost:3000/assessments \
+#      -H "Content-Type: application/json" \
+#      -d '{
+#            "name": "AI",
+#            "parent_id": null
+#          }'
+
+# for delete assessemnt
+# curl -X DELETE http://localhost:3000/assessments/4
+
+# # for update assessment
+# curl -X PUT http://localhost:3000/assessments/3 \
+#      -H "Content-Type: application/json" \
+#      -d '{"name": "Cybersecurity", "parent_id": null}'
+
+
+# for crate question 
+
+# POST http://localhost:3000/questions
+# Content-Type: application/json
+
+# {
+#   "question_text": "What is the capital of France?",
+#   "assessment_id": 3, 
+#   "options": [
+#     { "option_text": "Paris", "is_correct": true },
+#     { "option_text": "Berlin", "is_correct": false },
+#     { "option_text": "Madrid", "is_correct": false }
+#   ]
+# }
+
+# submit answer test
+# curl -X POST http://localhost:3000/questions/submit-answer \
+#   -H "Content-Type: application/json" \
+#   -d '{
+#     "question_id": 5,
+#     "option_id": 3
+#   }'
