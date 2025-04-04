@@ -19,6 +19,6 @@ export class CreateQuestionDto {
   @IsNumber()
   points?: number;
 
-  // @IsBoolean()
-  // is_multiple_choice?: boolean;
+  @IsBoolean()
+  is_multiple_choice?: boolean;
 }
