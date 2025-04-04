@@ -40,6 +40,6 @@ export class Question {
   @Column({ default: false }) // ✅ NEW: Adds support for multiple-choice questions.
   is_multiple_choice: boolean;
 
-  @Column({ default: 1 })
+  @Column('float', { default: 1 })  // Changed to float
   points: number;
 }

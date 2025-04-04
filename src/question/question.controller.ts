@@ -22,9 +22,9 @@ export class QuestionsController {
   // Endpoint for submitting the answer
   @Post('submit-answer')
   async submitAnswer(
-    @Body() body: { question_id: number; option_id: number; user_id: number },
+    @Body() body: { question_id: number; option_ids: number[]; user_id: number },
   ): Promise<any> {
-    const { question_id, option_id, user_id } = body;
-    return this.questionsService.submitAnswer(question_id, option_id, user_id);
+    const { question_id, option_ids, user_id } = body;
+    return this.questionsService.submitAnswer(question_id, option_ids, user_id);
   }
 }

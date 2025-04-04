@@ -13,7 +13,7 @@ export class UserScore {
   @ManyToOne(() => Assessment, (assessment) => assessment.scores, { onDelete: 'CASCADE' })
   assessment: Assessment;
 
-  @Column({ default: 0 })
+  @Column('float', { default: 0 })
   score: number;
 
   @Column({ default: 0 })

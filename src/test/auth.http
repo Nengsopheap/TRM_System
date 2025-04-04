@@ -41,30 +41,38 @@
 
 # for crate question 
 
-# POST http://localhost:3000/questions
-# Content-Type: application/json
-
-# {
-#   "question_text": "What is the capital of France168?",
-#   "assessment_id": 3, 
-#     "points": 1,
-#   "options": [
-#     { "option_text": "Paris", "is_correct": true },
-#     { "option_text": "Berlin", "is_correct": false },
-#     { "option_text": "Rome", "is_correct": false },
-#     { "option_text": "Madrid", "is_correct": false }
-#   ],
-#   "is_multiple_choice": false
-# }
-
-# # submit answer test
-
-POST http://localhost:3000/questions/submit-answer
+POST http://localhost:3000/questions
 Content-Type: application/json
 
 {
-  "question_id": 36,
-  "option_id": [93,94],  
-  "user_id": 6
-
+  "question_text": "In a relational database, what does SQL stand for for testing data?",
+  "assessment_id": 7, 
+    "points": 1,
+  "options": [
+    { "option_text": "Structured Question Language", "is_correct": false },
+    { "option_text": "Simple Query Language", "is_correct": true },
+    { "option_text": "Structured Query Language", "is_correct": true },
+    { "option_text": "Sequential Query Logi", "is_correct": false }
+  ],
+  "is_multiple_choice": true
 }
+
+# # submit answer test
+
+# POST http://localhost:3000/questions/submit-answer
+# Content-Type: application/json
+
+# {
+#   "question_id": 50,
+#   "option_ids": [150,151],  
+#   "user_id": 2
+# }
+
+# POST http://localhost:3000/questions/submit-answer
+# Content-Type: application/json
+
+# {
+#   "question_id": 49,
+#   "option_ids": [147], 
+#   "user_id": 2
+# }

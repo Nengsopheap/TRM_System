@@ -192,67 +192,38 @@ export class QuestionsService {
         'and user:',
         user_id,
       );
-
+  
       // Fetch the question with relations
       const question = await this.questionsRepository.findOne({
         where: { id: question_id },
         relations: ['options', 'assessment'],
       });
-
-      if (!question) {
-        console.error('Question not found:', question_id);
-        throw new NotFoundException('Question not found');
-      }
-
-      if (!question.assessment) {
-        console.error('Assessment not found for question:', question_id);
+  
+      if (!question) throw new NotFoundException('Question not found');
+      if (!question.assessment)
         throw new NotFoundException('Assessment not found for this question');
-      }
-
-      // Fetch all selected options
+  
+      // Fetch selected options
       const selectedOptions = await this.optionsRepository.find({
         where: { id: In(option_ids), question: { id: question_id } },
       });
-
-      console.log('Selected options:', selectedOptions);
-
-      if (selectedOptions.length === 0) {
-        console.error('No valid options found for question:', question_id);
+  
+      if (selectedOptions.length === 0)
         throw new NotFoundException('No valid options found for this question');
-      }
-
-      // Fetch all correct options for this question
+  
       const correctOptions = question.options.filter((opt) => opt.is_correct);
-      console.log('Correct options:', correctOptions);
-
-      // Determine if the selected options are correct
-      const correctSelected = selectedOptions.filter(
-        (opt) => opt.is_correct,
-      ).length;
+      const correctSelected = selectedOptions.filter((opt) => opt.is_correct)
+        .length;
       const totalCorrect = correctOptions.length;
-
-      console.log(
-        'Correct selected:',
-        correctSelected,
-        'Total correct:',
-        totalCorrect,
-      );
-
-      // Calculate partial correctness (for multiple-choice questions)
-      let pointsAwarded = (correctSelected / totalCorrect) * question.points; // Award partial points
-      console.log('Points awarded:', pointsAwarded);
-
-      // Fetch the user
-      const user = await this.usersRepository.findOne({
-        where: { id: user_id },
-      });
-
-      if (!user) {
-        console.error('User not found:', user_id);
-        throw new NotFoundException('User not found');
-      }
-
-      // Save each answer separately
+  
+      const pointsAwarded =
+        totalCorrect > 0
+          ? (correctSelected / totalCorrect) * question.points
+          : 0;
+  
+      const user = await this.usersRepository.findOne({ where: { id: user_id } });
+      if (!user) throw new NotFoundException('User not found');
+  
       for (const option of selectedOptions) {
         const answer = this.answersRepository.create({
           question,
@@ -262,50 +233,53 @@ export class QuestionsService {
         });
         await this.answersRepository.save(answer);
       }
-
-      // Handle user score tracking
+  
       let userScore = await this.userScoreRepository.findOne({
         where: {
           user: { id: user_id },
           assessment: { id: question.assessment.id },
         },
       });
-
+  
       if (userScore) {
-        // Update existing score
         userScore.score += pointsAwarded;
         userScore.correct_answers += correctSelected;
         userScore.wrong_answers += selectedOptions.length - correctSelected;
-        userScore.total_quizzes += 1;
       } else {
-        // Create new score record
         userScore = this.userScoreRepository.create({
           user,
           assessment: question.assessment,
           score: pointsAwarded,
           correct_answers: correctSelected,
           wrong_answers: selectedOptions.length - correctSelected,
-          total_quizzes: 1,
+          total_quizzes: 0, // Start total quizzes from 0 and count only after each quiz is answered
         });
       }
-
-      // Calculate percentages
-      const correctPercentage =
-        (userScore.correct_answers / userScore.total_quizzes) * 100;
-      const wrongPercentage =
-        (userScore.wrong_answers / userScore.total_quizzes) * 100;
+  
+      // ✅ FIXED: Handle the correct percentage and wrong percentage separately for multiple-choice vs single-choice questions.
+      let correctPercentage: number;
+      let wrongPercentage: number;
+  
+      // If it's a single-choice question, we increment the total quizzes count
+      if (!question.is_multiple_choice) {
+        userScore.total_quizzes += 1; // Increment only for single-choice quizzes
+      }
+  
+      const totalAnswers =
+        userScore.correct_answers + userScore.wrong_answers;
+  
+      correctPercentage =
+        totalAnswers > 0
+          ? (userScore.correct_answers / totalAnswers) * 100
+          : 0;
+      wrongPercentage =
+        totalAnswers > 0
+          ? (userScore.wrong_answers / totalAnswers) * 100
+          : 0;
+  
       userScore.percentage = correctPercentage;
-
-      // Save updated score
       await this.userScoreRepository.save(userScore);
-
-      console.log('Final result:', {
-        correct: correctSelected === totalCorrect,
-        points: pointsAwarded,
-        correctPercentage,
-        wrongPercentage,
-      });
-
+  
       return {
         correct: correctSelected === totalCorrect,
         points: pointsAwarded,
@@ -317,6 +291,7 @@ export class QuestionsService {
       throw new Error('Error occurred while saving the answer');
     }
   }
+  
 
   // async submitAnswer(
   //   question_id: number,
