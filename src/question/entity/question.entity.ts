@@ -34,6 +34,12 @@ export class Question {
   @Column({ nullable: true })
   correct_option_id: number;
 
+  // @Column('simple-array', { nullable: true })
+  // correct_option_ids: number[];
+
+  // @Column({ default: false }) // ✅ NEW: Adds support for multiple-choice questions.
+  // is_multiple_choice: boolean;
+
   @Column({ default: 1 })
   points: number;
 }

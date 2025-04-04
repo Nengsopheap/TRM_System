@@ -21,6 +21,7 @@
 
 
 # for create assessment
+
 # curl -X POST http://localhost:3000/assessments \
 #      -H "Content-Type: application/json" \
 #      -d '{
@@ -29,6 +30,7 @@
 #          }'
 
 # for delete assessemnt
+
 # curl -X DELETE http://localhost:3000/assessments/4
 
 # # for update assessment
@@ -45,20 +47,23 @@
 # {
 #   "question_text": "What is the capital of France168?",
 #   "assessment_id": 3, 
-#     "points": 5,
+#     "points": 1,
 #   "options": [
 #     { "option_text": "Paris", "is_correct": true },
 #     { "option_text": "Berlin", "is_correct": false },
+#     { "option_text": "Rome", "is_correct": false },
 #     { "option_text": "Madrid", "is_correct": false }
 #   ]
 # }
 
-# submit answer test
+# # submit answer test
+
 POST http://localhost:3000/questions/submit-answer
 Content-Type: application/json
 
 {
-  "user_id": 2,
-  "question_id": 20,
-  "option_id": 47
+  "user_id": 3,
+  "question_id": 35,
+  "option_id": 89
+
 }

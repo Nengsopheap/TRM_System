@@ -1,6 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne ,OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Question } from './question.entity';
-import { Answer } from './submit_answer_entity'; 
+import { Answer } from './submit_answer_entity';
 @Entity()
 export class Option {
   @PrimaryGeneratedColumn()
@@ -12,7 +18,7 @@ export class Option {
   @Column({ default: false })
   is_correct: boolean;
 
-  @OneToMany(() => Answer, (answer) => answer.option)  // Add this line for reverse relation
+  @OneToMany(() => Answer, (answer) => answer.option) // Add this line for reverse relation
   answers: Answer[];
 
   @ManyToOne(() => Question, (question) => question.options)
@@ -24,5 +30,3 @@ export class Option {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 }
-
-
