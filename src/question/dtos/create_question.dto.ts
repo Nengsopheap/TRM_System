@@ -1,4 +1,11 @@
-import { IsArray, IsNotEmpty, IsString, IsNumber, IsBoolean } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsBoolean,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateQuestionDto {
   @IsNotEmpty()
@@ -21,4 +28,8 @@ export class CreateQuestionDto {
 
   @IsBoolean()
   is_multiple_choice?: boolean;
+
+   @IsBoolean()
+  @IsOptional()
+  is_yes_no?: boolean;
 }

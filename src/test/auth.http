@@ -41,21 +41,58 @@
 
 # for crate question 
 
-POST http://localhost:3000/questions
-Content-Type: application/json
+# POST http://localhost:3000/questions
+# Content-Type: application/json
 
-{
-  "question_text": "In a relational database, what does SQL stand for for testing data?",
-  "assessment_id": 7, 
-    "points": 1,
-  "options": [
-    { "option_text": "Structured Question Language", "is_correct": false },
-    { "option_text": "Simple Query Language", "is_correct": true },
-    { "option_text": "Structured Query Language", "is_correct": true },
-    { "option_text": "Sequential Query Logi", "is_correct": false }
-  ],
-  "is_multiple_choice": true
-}
+# {
+#   "question_text": "In a relational database, what does SQL stand for for testing data?",
+#   "assessment_id": 7, 
+#     "points": 1,
+#   "options": [
+#     { "option_text": "Structured Question Language", "is_correct": false },
+#     { "option_text": "Simple Query Language", "is_correct": true },
+#     { "option_text": "Structured Query Language", "is_correct": false },
+#     { "option_text": "Sequential Query Logi", "is_correct": false }
+#   ],
+#   "is_multiple_choice": false,
+#   "is_yes_no": false
+# }
+
+# for single question 
+
+# POST http://localhost:3000/questions
+# Content-Type: application/json
+
+# {
+#   "question_text": "In a relational database, what does SQL stand for for testing data?",
+#   "assessment_id": 7, 
+#     "points": 1,
+#   "options": [
+#     { "option_text": "Structured Question Language", "is_correct": false },
+#     { "option_text": "Simple Query Language", "is_correct": true },
+#     { "option_text": "Structured Query Language", "is_correct": false },
+#     { "option_text": "Sequential Query Logi", "is_correct": false }
+#   ],
+#   "is_multiple_choice": false,
+#   "is_yes_no": false
+# }
+
+# for yes or no yes 
+# POST http://localhost:3000/questions
+# Content-Type: application/json
+
+# {
+#   "question_text": "Is SQL used for querying databases?",
+#   "assessment_id": 7,
+#   "points": 1,
+#   "options": [
+#     { "option_text": "Yes", "is_correct": true },
+#     { "option_text": "No", "is_correct": false }
+#   ],
+#   "is_multiple_choice": false,  
+#   "is_yes_no": true  
+# }
+
 
 # # submit answer test
 
@@ -68,11 +105,20 @@ Content-Type: application/json
 #   "user_id": 2
 # }
 
+POST http://localhost:3000/questions/submit-answer
+Content-Type: application/json
+
+{
+  "question_id": 76,
+  "option_ids": [214],  
+  "user_id": 2
+}
+
 # POST http://localhost:3000/questions/submit-answer
 # Content-Type: application/json
 
 # {
-#   "question_id": 49,
-#   "option_ids": [147], 
+#   "question_id": 77,
+#     "option_ids": ["yes"],
 #   "user_id": 2
 # }
