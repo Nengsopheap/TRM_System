@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Get } from '@nestjs/common';
 import { QuestionsService } from './question.service';
 import { CreateQuestionDto } from './dtos/create_question.dto';
 import { SubmitAnswerDto } from './dtos/submit_answer.dto';
@@ -27,4 +27,10 @@ export class QuestionsController {
     const { question_id, option_ids, user_id } = body;
     return this.questionsService.submitAnswer(question_id, option_ids, user_id);
   }
+
+    // New endpoint for finding all submitted answers
+    @Get('all')
+    async findAllSubmitAnswers(): Promise<any[]> {
+      return this.questionsService.findAllSubmitAnswers();
+    }
 }

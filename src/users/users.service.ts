@@ -2,11 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserRole } from './entity/users.entity';
+import {UserScore} from './entity/user_score.entity';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private userRepo: Repository<User>,
+    @InjectRepository(UserScore) private userScoreRepo: Repository<UserScore>
+  ) {}
+
 
   async createUser(email: string, password: string, role: UserRole) {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,5 +29,11 @@ export class UsersService {
 
   async findAll() {
     return this.userRepo.find();
+  }
+
+  async findAllScores() {
+    return this.userScoreRepo.find({
+      relations: ['user'],  
+    });
   }
 }

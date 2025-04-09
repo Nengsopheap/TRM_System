@@ -38,6 +38,9 @@
 #      -H "Content-Type: application/json" \
 #      -d '{"name": "Cybersecurity", "parent_id": null}'
 
+# for get all assessemnt 
+
+# curl -X GET http://localhost:3000/assessments -H "Content-Type: application/json"
 
 # for crate question 
 
@@ -82,7 +85,7 @@
 # Content-Type: application/json
 
 # {
-#   "question_text": "Is SQL used for querying databases?",
+#   "question_text": "Is SQL used for querying kjkjkdatabases?",
 #   "assessment_id": 7,
 #   "points": 1,
 #   "options": [
@@ -105,20 +108,30 @@
 #   "user_id": 2
 # }
 
-POST http://localhost:3000/questions/submit-answer
-Content-Type: application/json
+# POST http://localhost:3000/questions/submit-answer
+# Content-Type: application/json
 
-{
-  "question_id": 76,
-  "option_ids": [214],  
-  "user_id": 2
-}
+# {
+#   "question_id": 76,
+#   "option_ids": [214],  
+#   "user_id": 2
+# }
+
+# curl -X GET http://localhost:3000/questions/all \
+# -H "Content-Type: application/json"
+
 
 # POST http://localhost:3000/questions/submit-answer
 # Content-Type: application/json
 
 # {
 #   "question_id": 77,
-#     "option_ids": ["yes"],
+#     "option_ids": "Yes",
 #   "user_id": 2
 # }
+
+
+# for user score 
+
+
+curl -X GET http://localhost:3000/users/all-scores -H "Content-Type: application/json"

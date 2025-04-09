@@ -17,4 +17,9 @@ export class UsersController {
   async getAllUsers() {
     return this.usersService.findAll();
   }
+
+  @Get('all-scores')
+  async findAllScores() {
+    return this.usersService.findAllScores();
+  }
 }
