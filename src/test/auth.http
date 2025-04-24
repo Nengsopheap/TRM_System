@@ -54,10 +54,10 @@
 #   "options": [
 #     { "option_text": "Structured Question Language", "is_correct": false },
 #     { "option_text": "Simple Query Language", "is_correct": true },
-#     { "option_text": "Structured Query Language", "is_correct": false },
+#     { "option_text": "Structured Query Language", "is_correct": true },
 #     { "option_text": "Sequential Query Logi", "is_correct": false }
 #   ],
-#   "is_multiple_choice": false,
+#   "is_multiple_choice": true,
 #   "is_yes_no": false
 # }
 
@@ -104,8 +104,8 @@
 
 # {
 #   "question_id": 50,
-#   "option_ids": [150,151],  
-#   "user_id": 2
+#   "option_ids": [150,152,153,154],  
+#   "user_id": 1
 # }
 
 # POST http://localhost:3000/questions/submit-answer
@@ -114,7 +114,7 @@
 # {
 #   "question_id": 76,
 #   "option_ids": [214],  
-#   "user_id": 2
+#   "user_id": 1
 # }
 
 # curl -X GET http://localhost:3000/questions/all \
@@ -134,4 +134,24 @@
 # for user score 
 
 
-curl -X GET http://localhost:3000/users/all-scores -H "Content-Type: application/json"
+# curl -X GET http://localhost:3000/users/all-scores -H "Content-Type: application/json"
+
+
+
+# for create lesson
+
+curl -X POST http://localhost:3000/lessons \
+     -H "Content-Type: application/json" \
+     -d '{
+           "title": "Cybersecurity",
+           "course_id": 1
+         }'
+
+# for create coures 
+
+# curl -X POST http://localhost:3000/courses \
+#      -H "Content-Type: application/json" \
+#      -d '{
+#            "title": "Cybersecurity",
+          
+#          }'

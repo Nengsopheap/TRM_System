@@ -11,7 +11,11 @@ import { Assessment } from './assessment/entity/assessment.entity';
 import { Question } from './question/entity/question.entity';
 import { Option } from './question/entity/option.entity';
 import { Answer } from './question/entity/submit_answer_entity';
-
+import { LessonController } from './lesson/lesson.controller';
+import { LessonModule } from './lesson/lesson.module';
+import { Lesson } from './lesson/entity/lesson.entity';
+import { CourseModule } from './course/course.module';
+import { Course } from './course/Entity/course.entity';
 
 @Module({
   imports: [
@@ -23,13 +27,24 @@ import { Answer } from './question/entity/submit_answer_entity';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'Pheap9999',
       database: process.env.DB_NAME || 'qcm_db',
-      entities: [User, Assessment, Question, Option, Answer, UserScore],
+      entities: [
+        User,
+        Assessment,
+        Question,
+        Option,
+        Answer,
+        UserScore,
+        Lesson,
+        Course,
+      ],
       synchronize: true,
     }),
     UsersModule,
     AuthModule,
     AssessmentModule,
     QuestionModule,
+    LessonModule,
+    CourseModule,
   ],
   exports: [TypeOrmModule],
 })
