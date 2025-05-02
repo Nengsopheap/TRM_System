@@ -239,11 +239,15 @@ export class QuestionsService {
     }
     return answers;
   }
-  
 
   // Find all questions with their options
   async findAll(): Promise<Question[]> {
-    return this.questionsRepository.find({ relations: ['options'] });
+    return this.questionsRepository.find({
+      relations: ['options', 'assessment'],
+    });
+  }
+  async getAllQuestions(): Promise<Question[]> {
+    return this.questionsRepository.find({ relations: ['options', 'assessment'] }); // Add relations if you want options too
   }
 
   // Validate the user's answer
@@ -271,4 +275,20 @@ export class QuestionsService {
     // Return whether the selected option is correct
     return selectedOption.id === question.correct_option_id;
   }
+
+  async getQuestionByAssessmentId(assessment_id: number): Promise<Question[]> {
+    const assessment = await this.assessmentsRepository.findOne({
+      where: { id: assessment_id },
+    });
+  
+    if (!assessment) {
+      throw new NotFoundException('Assessment not found');
+    }
+  
+    return this.questionsRepository.find({
+      where: { assessment: { id: assessment_id } },
+      relations: ['options', 'assessment'], // include relations if needed
+    });
+  }
+  
 }

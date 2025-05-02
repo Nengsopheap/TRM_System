@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param } from '@nestjs/common';
 import { QuestionsService } from './question.service';
 import { CreateQuestionDto } from './dtos/create_question.dto';
 import { SubmitAnswerDto } from './dtos/submit_answer.dto';
@@ -22,15 +22,31 @@ export class QuestionsController {
   // Endpoint for submitting the answer
   @Post('submit-answer')
   async submitAnswer(
-    @Body() body: { question_id: number; option_ids: number[]; user_id: number },
+    @Body()
+    body: {
+      question_id: number;
+      option_ids: number[];
+      user_id: number;
+    },
   ): Promise<any> {
     const { question_id, option_ids, user_id } = body;
     return this.questionsService.submitAnswer(question_id, option_ids, user_id);
   }
 
-    // New endpoint for finding all submitted answers
-    @Get('all')
-    async findAllSubmitAnswers(): Promise<any[]> {
-      return this.questionsService.findAllSubmitAnswers();
-    }
+  // New endpoint for finding all submitted answers
+  @Get('all')
+  async findAllSubmitAnswers(): Promise<any[]> {
+    return this.questionsService.findAllSubmitAnswers();
+  }
+
+  @Get()
+  async getAllQuestions(): Promise<Question[]> {
+    return this.questionsService.getAllQuestions();
+  }
+  @Get('/:assessment_id')
+  async getQuestionByAssessmentId(
+    @Param('assessment_id') assessment_id: number,
+  ): Promise<Question[]> {
+    return this.questionsService.getQuestionByAssessmentId(assessment_id);
+  }
 }

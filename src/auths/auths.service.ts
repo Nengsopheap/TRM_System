@@ -6,6 +6,8 @@ import { UserRole } from '../users/entity/users.entity';
 
 @Injectable()
 export class AuthService {
+  private blacklistedTokens: Set<string> = new Set(); // In-memory blacklist
+
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
@@ -32,5 +34,24 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+  async validateToken(token: string) {
+    try {
+      const payload = this.jwtService.verify(token); // Verify the token
+      return payload ? { email: payload.email, role: payload.role } : null; // Return the payload if valid
+    } catch (e) {
+      return null; // Return null if the token is invalid or expired
+    }
+  }
+  
+
+  // Method to log out by blacklisting the JWT token
+  logout(token: string) {
+    this.blacklistedTokens.add(token);
+  }
+
+  // Method to check if a token is blacklisted
+  isTokenBlacklisted(token: string): boolean {
+    return this.blacklistedTokens.has(token);
   }
 }

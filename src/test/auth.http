@@ -2,20 +2,24 @@
 # Content-Type: application/json
 
 # {
-#   "email": "new6889@example.com",
+#   "email": "new6ee889@example.com",
 #   "password": "mypassword",
 #   "role": "admin"
 # }
+
+# curl -X GET http://localhost:3000/users/all -H "Content-Type: application/json"
 
 # POST http://localhost:3000/auth/login
 # Content-Type: application/json
 
 # {
-#   "email": "newuser96889@example.com",
+#   "email": "new6ee889@example.com",
 #   "password": "mypassword"
 # }
 
-# for list all user 
+# ### LOGOUT - Use the token received above for this step
+# POST http://localhost:3000/auth/logout
+# Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5ldzZlZTg4OUBleGFtcGxlLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTU1MzE1MSwiZXhwIjoxNzQ1NTU2NzUxfQ.7cfNyS_fREpSkXPY9YFBKZgXHfiPYpBxeZQ2WS6lZP0"
 
 # curl -X GET http://localhost:3000/users/all -H "Content-Type: application/json"
 
@@ -33,8 +37,8 @@
 
 # curl -X DELETE http://localhost:3000/assessments/4
 
-# # for update assessment
-# curl -X PUT http://localhost:3000/assessments/3 \
+# for update assessment
+# curl -X PUT http://localhost:3000/assessments/6 \
 #      -H "Content-Type: application/json" \
 #      -d '{"name": "Cybersecurity", "parent_id": null}'
 
@@ -42,20 +46,20 @@
 
 # curl -X GET http://localhost:3000/assessments -H "Content-Type: application/json"
 
-# for crate question 
+# for crate multiple
 
 # POST http://localhost:3000/questions
 # Content-Type: application/json
 
 # {
-#   "question_text": "In a relational database, what does SQL stand for for testing data?",
-#   "assessment_id": 7, 
+#   "question_text": "Which of these technologies rely on AI? (Select all that apply)?",
+#   "assessment_id": 5, 
 #     "points": 1,
 #   "options": [
-#     { "option_text": "Structured Question Language", "is_correct": false },
-#     { "option_text": "Simple Query Language", "is_correct": true },
-#     { "option_text": "Structured Query Language", "is_correct": true },
-#     { "option_text": "Sequential Query Logi", "is_correct": false }
+#     { "option_text": " Autonomous vehicles ", "is_correct": true },
+#     { "option_text": "Chatbots  ", "is_correct": true },
+#     { "option_text": "Smart thermostats", "is_correct": true },
+#     { "option_text": "Cryptocurrency mining", "is_correct": false }
 #   ],
 #   "is_multiple_choice": true,
 #   "is_yes_no": false
@@ -67,14 +71,14 @@
 # Content-Type: application/json
 
 # {
-#   "question_text": "In a relational database, what does SQL stand for for testing data?",
-#   "assessment_id": 7, 
+#   "question_text": "Which of the following best describes the concept of Machine Learning?",
+#   "assessment_id": 5, 
 #     "points": 1,
 #   "options": [
-#     { "option_text": "Structured Question Language", "is_correct": false },
-#     { "option_text": "Simple Query Language", "is_correct": true },
-#     { "option_text": "Structured Query Language", "is_correct": false },
-#     { "option_text": "Sequential Query Logi", "is_correct": false }
+#     { "option_text": "A type of AI that allows machines to predict outcomes based on patterns in data", "is_correct": true },
+#     { "option_text": "A computer that learns from its own mistakes ", "is_correct": false },
+#     { "option_text": "A set of instructions to automate tasks", "is_correct": false },
+#     { "option_text": " A kind of robot that performs repetitive tasks", "is_correct": false }
 #   ],
 #   "is_multiple_choice": false,
 #   "is_yes_no": false
@@ -85,12 +89,12 @@
 # Content-Type: application/json
 
 # {
-#   "question_text": "Is SQL used for querying kjkjkdatabases?",
-#   "assessment_id": 7,
+#   "question_text": "Is AI capable of achieving superintelligence that exceeds human cognitive abilities?",
+#   "assessment_id": 5,
 #   "points": 1,
 #   "options": [
-#     { "option_text": "Yes", "is_correct": true },
-#     { "option_text": "No", "is_correct": false }
+#     { "option_text": "Yes", "is_correct": false },
+#     { "option_text": "No", "is_correct": true }
 #   ],
 #   "is_multiple_choice": false,  
 #   "is_yes_no": true  
@@ -104,7 +108,7 @@
 
 # {
 #   "question_id": 50,
-#   "option_ids": [150,152,153,154],  
+#   "option_ids": [150,152,],  
 #   "user_id": 1
 # }
 
@@ -117,8 +121,11 @@
 #   "user_id": 1
 # }
 
-# curl -X GET http://localhost:3000/questions/all \
+# curl -X GET http://localhost:3000/questions
 # -H "Content-Type: application/json"
+
+# curl http://localhost:3000/questions/3
+
 
 
 # POST http://localhost:3000/questions/submit-answer
@@ -140,12 +147,12 @@
 
 # for create lesson
 
-curl -X POST http://localhost:3000/lessons \
-     -H "Content-Type: application/json" \
-     -d '{
-           "title": "Cybersecurity",
-           "course_id": 1
-         }'
+# curl -X POST http://localhost:3000/lessons \
+#      -H "Content-Type: application/json" \
+#      -d '{
+#            "title": "Cybersecurity",
+#            "course_id": 1
+#          }'
 
 # for create coures 
 

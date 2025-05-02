@@ -40,7 +40,7 @@ import { Course } from './course/Entity/course.entity';
       synchronize: true,
     }),
     UsersModule,
-    AuthModule,
+    AuthModule,  // Ensure AuthModule is imported
     AssessmentModule,
     QuestionModule,
     LessonModule,

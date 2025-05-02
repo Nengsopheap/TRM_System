@@ -4,7 +4,13 @@ import { UsersService } from './users/users.service';
 import { UserRole } from './users/entity/users.entity';
 
 async function bootstrap() {
+  
   const app = await NestFactory.create(AppModule);
+    // Enable CORS
+    app.enableCors({
+      origin: 'http://localhost:5173', // or '*' to allow all origins
+      credentials: true,
+    });
   const usersService = app.get(UsersService);
 
   // Check if an admin exists
