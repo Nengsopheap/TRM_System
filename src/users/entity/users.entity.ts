@@ -2,8 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import UserScore from './user_score.entity';
 
 export enum UserRole {
-  NORMAL = 'normal',
-  SPECIAL = 'special',
+  USER = 'user',
   ADMIN = 'admin',
 }
 
@@ -18,7 +17,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.NORMAL })
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;
 
   @OneToMany(() => UserScore, (userScore) => userScore.user)

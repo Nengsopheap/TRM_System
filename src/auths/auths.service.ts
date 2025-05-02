@@ -6,51 +6,60 @@ import { UserRole } from '../users/entity/users.entity';
 
 @Injectable()
 export class AuthService {
-  private blacklistedTokens: Set<string> = new Set(); // In-memory blacklist
+  private blacklistedTokens: Set<string> = new Set();
 
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
-  async validateAdmin(email: string, password: string) {
+  async validateUserRole(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
-    if (!user || user.role !== UserRole.ADMIN) {
+    console.log('Login attempt email:', email);
+    console.log('User found in DB:', user);
+  
+    if (!user) {
+      console.log('❌ No user found');
       throw new UnauthorizedException('Access denied');
     }
-
+  
+    console.log('User role:', user.role);
+  
+    // Check if the password is correct
     const passwordMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match:', passwordMatch);
+  
     if (!passwordMatch) {
+      console.log('❌ Password does not match');
       throw new UnauthorizedException('Invalid credentials');
     }
-
+  
     return user;
   }
+  
 
   async login(email: string, password: string) {
-    const user = await this.validateAdmin(email, password);
+    const user = await this.validateUserRole(email, password);
     const payload = { email: user.email, role: user.role };
 
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
+
   async validateToken(token: string) {
     try {
-      const payload = this.jwtService.verify(token); // Verify the token
-      return payload ? { email: payload.email, role: payload.role } : null; // Return the payload if valid
+      const payload = this.jwtService.verify(token);
+      return payload ? { email: payload.email, role: payload.role } : null;
     } catch (e) {
-      return null; // Return null if the token is invalid or expired
+      return null;
     }
   }
-  
 
-  // Method to log out by blacklisting the JWT token
   logout(token: string) {
     this.blacklistedTokens.add(token);
   }
 
-  // Method to check if a token is blacklisted
   isTokenBlacklisted(token: string): boolean {
     return this.blacklistedTokens.has(token);
   }
