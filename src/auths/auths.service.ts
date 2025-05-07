@@ -20,7 +20,7 @@ export class AuthService {
   
     if (!user) {
       console.log('❌ No user found');
-      throw new UnauthorizedException('Access denied');
+      throw new UnauthorizedException('No user found');
     }
   
     console.log('User role:', user.role);

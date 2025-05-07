@@ -17,8 +17,9 @@ export class Answer {
   @ManyToOne(() => Question, (question) => question.answers)
   question: Question;
 
-  @ManyToOne(() => Option, (option) => option.answers)
+  @ManyToOne(() => Option, (option) => option.answers, { onDelete: 'CASCADE' })
   option: Option;
+  
 
   @ManyToOne(() => Option, (option) => option.answers)
   @JoinColumn({ name: 'user_id' })

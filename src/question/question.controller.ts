@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Param } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param,Delete } from '@nestjs/common';
 import { QuestionsService } from './question.service';
 import { CreateQuestionDto } from './dtos/create_question.dto';
 import { SubmitAnswerDto } from './dtos/submit_answer.dto';
@@ -18,6 +18,18 @@ export class QuestionsController {
     @Body() createQuestionDto: CreateQuestionDto,
   ): Promise<Question> {
     return this.questionsService.create(createQuestionDto);
+  }
+
+  async updateQuestion(
+    @Param('id') id: number,
+    @Body() updateData: Partial<CreateQuestionDto>,
+  ): Promise<Question> {
+    return this.questionsService.updateQuestion(id, updateData);
+  }
+  
+  @Delete(':id')
+  async deleteQuestion(@Param('id') id: number): Promise<{ message: string }> {
+    return this.questionsService.deleteQuestion(id);
   }
   // Endpoint for submitting the answer
   @Post('submit-answer')
