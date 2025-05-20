@@ -16,6 +16,8 @@ import { LessonModule } from './lesson/lesson.module';
 import { Lesson } from './lesson/entity/lesson.entity';
 import { CourseModule } from './course/course.module';
 import { Course } from './course/Entity/course.entity';
+import { PostModule } from './post/post.module';
+import { Post } from './post/entity/post.entity';
 
 @Module({
   imports: [
@@ -36,15 +38,17 @@ import { Course } from './course/Entity/course.entity';
         UserScore,
         Lesson,
         Course,
+        Post,
       ],
       synchronize: true,
     }),
     UsersModule,
-    AuthModule,  // Ensure AuthModule is imported
+    AuthModule, // Ensure AuthModule is imported
     AssessmentModule,
     QuestionModule,
     LessonModule,
     CourseModule,
+    PostModule,
   ],
   exports: [TypeOrmModule],
 })

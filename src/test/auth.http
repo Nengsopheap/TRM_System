@@ -111,7 +111,7 @@
 
 # for delete question
 
-curl -X DELETE http://localhost:3000/questions/59
+# curl -X DELETE http://localhost:3000/questions/59
 
 
 # # submit answer test
@@ -175,3 +175,8 @@ curl -X DELETE http://localhost:3000/questions/59
 #            "title": "Cybersecurity",
           
 #          }'
+
+
+curl -X POST http://localhost:3000/posts ^
+  -F "title=My test post" ^
+  -F "image=@C:/Users/Sopheap/Pictures/POS/piza.png"
