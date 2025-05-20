@@ -18,6 +18,8 @@ import { CourseModule } from './course/course.module';
 import { Course } from './course/Entity/course.entity';
 import { PostModule } from './post/post.module';
 import { Post } from './post/entity/post.entity';
+import { ToptipModule } from './toptip/toptip.module';
+import { Toptip } from './toptip/entity/toptip.entity';
 
 @Module({
   imports: [
@@ -39,6 +41,7 @@ import { Post } from './post/entity/post.entity';
         Lesson,
         Course,
         Post,
+        Toptip,
       ],
       synchronize: true,
     }),
@@ -49,6 +52,7 @@ import { Post } from './post/entity/post.entity';
     LessonModule,
     CourseModule,
     PostModule,
+    ToptipModule,
   ],
   exports: [TypeOrmModule],
 })

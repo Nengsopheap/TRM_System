@@ -176,7 +176,37 @@
           
 #          }'
 
+# for test Post and upload image 
+# curl -X POST http://localhost:3000/posts ^
+#   -F "title=My test post" ^
+#   -F "image=@C:/Users/Sopheap/Pictures/POS/piza.png"
 
-curl -X POST http://localhost:3000/posts ^
-  -F "title=My test post" ^
-  -F "image=@C:/Users/Sopheap/Pictures/POS/piza.png"
+
+
+### Create another Toptip
+# POST http://localhost:3000/toptip
+# Content-Type: application/json
+
+# {
+#   "title": "Set up and perform regular backups",
+#   "description": "Updating your apps and devices can fix issues and address new security concerns or weaknesses that hackers could use to access your devices or accounts. They can also add new features."
+# }
+
+## Get all Toptips
+GET http://localhost:3000/toptip
+
+### Update a Toptip (change ID as needed)
+# PUT http://localhost:3000/toptip/1
+# Content-Type: application/json
+
+# {
+#   "title": "Updated Undo Tip",
+#   "description": "Use Ctrl + Z to reverse recent changes."
+# }
+
+###
+
+### Delete a Toptip (change ID as needed)
+DELETE http://localhost:3000/toptip/1
+
+###
