@@ -193,7 +193,7 @@
 # }
 
 ## Get all Toptips
-GET http://localhost:3000/toptip
+# GET http://localhost:3000/toptip
 
 ### Update a Toptip (change ID as needed)
 # PUT http://localhost:3000/toptip/1
@@ -207,6 +207,44 @@ GET http://localhost:3000/toptip
 ###
 
 ### Delete a Toptip (change ID as needed)
-DELETE http://localhost:3000/toptip/1
+# DELETE http://localhost:3000/toptip/1
 
 ###
+
+### Create a LearnTip (ensure Toptip with ID 2 exists)
+POST http://localhost:3000/learntip
+Content-Type: application/json
+
+{
+  "title": "Set up and perform regular backups",
+  "description": "Never worry about losing files again",
+  "case": "Case study: The importance of backing up your devices. The Croft family's home computer was hacked by cybercriminals and infected with ransomware. Tanya's teenage son Ben was using the computer to do an assignment. During his research he downloaded many files and documents. When he tried to open them later, he noticed that the files didn't have the usual file extension. Realising it was a cyber attack, Tanya didn't pay the ransom. She followed the Australian Signals Directorate’s Australian Cyber Security Centre's (ASD’s ACSC) ransomware emergency response guide and reported the incident straight away through ASD's ACSC’s ReportCyber. Tanya was able to use a backup drive to restore the family's files. But as it had been a few weeks since the last backup, some important files like Ben's assignment were gone. This case shows why it's important to back up your devices often or turn on automatic backups. It's the best way to protect yourself from ransomware and other online threats.",
+  "toptipId": 2
+}
+
+
+###
+
+### Get all LearnTips
+# GET http://localhost:3000/learntip
+
+###
+
+### Get LearnTips by Toptip ID
+# GET http://localhost:3000/learntip/by-toptip/2
+
+## Update LearnTip by ID
+# PUT http://localhost:3000/learntip/2
+# Content-Type: application/json
+
+# {
+#   "title": "Updated Shortcut Tip",
+#   "description": "This is a helpful updated tip for undoing actions.",
+#   "case": "Undoing mistakes in text editors.",
+#   "toptipId": 3
+# }
+
+###
+
+### Delete LearnTip by ID
+# DELETE http://localhost:3000/learntip/3
