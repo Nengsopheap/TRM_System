@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Question } from './../../question/entity/question.entity';
 import { UserScore } from './../../users/entity/user_score.entity';
+import { Lesson } from './../../lesson/entity/lesson.entity'
 @Entity()
 export class Assessment {
   @PrimaryGeneratedColumn()
@@ -16,6 +17,9 @@ export class Assessment {
   questions: Question[]; // This is the reverse side of the relationship to Question
   @OneToMany(() => UserScore, (userScore) => userScore.assessment)
   scores: UserScore[];
+
+    @OneToMany(() => Lesson, (lesson) => lesson.assessment)
+  lessons: Lesson[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

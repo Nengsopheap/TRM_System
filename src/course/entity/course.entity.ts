@@ -16,8 +16,8 @@ export class Course {
   @Column()
   title: string;
   
-  @OneToMany(() => Lesson, (lesson) => lesson.course)
-  lessons: Lesson[];
+  // @OneToMany(() => Lesson, (lesson) => lesson.course)
+  // lessons: Lesson[];
 
   @CreateDateColumn()
   created_at: Date;

@@ -1,19 +1,35 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn,ManyToOne, UpdateDateColumn } from 'typeorm';
-import { Course } from 'src/course/Entity/course.entity';
-@Entity()
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Assessment } from '../../assessment/entity/assessment.entity';
+
+@Entity('lessons')
 export class Lesson {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
+  title_en: string;
 
-  @ManyToOne(() => Course, (course) => course.lessons, { onDelete: 'SET NULL', nullable: true })
-  course: Course;
-  
-  @CreateDateColumn()
-  created_at: Date;
+  @Column()
+  title_kh: string;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @Column({ type: 'text', nullable: true })
+  title_answer_en: string;
+
+  @Column({ type: 'text', nullable: true })
+  title_answer_kh: string;
+
+  @Column({ type: 'text', nullable: true })
+  description_en: string;
+
+  @Column({ type: 'text', nullable: true })
+  description_kh: string;
+
+  @Column({ type: 'text', nullable: true })
+  content_en: string;
+
+  @Column({ type: 'text', nullable: true })
+  content_kh: string;
+
+  @ManyToOne(() => Assessment, (assessment) => assessment.lessons)
+  assessment: Assessment;
 }

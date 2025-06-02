@@ -6,6 +6,7 @@ import {
   Body,
   Put,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { LessonService } from './lesson.service';
 import { Lesson } from './entity/lesson.entity';
@@ -17,10 +18,7 @@ export class LessonController {
 
   @Post()
   async create(@Body() createLessonDto: CreateLessonDto): Promise<Lesson> {
-    return this.lessonService.createLesson(
-      createLessonDto.title,
-      createLessonDto.course_id,
-    );
+    return this.lessonService.createLesson(createLessonDto);
   }
 
   @Get()
@@ -29,20 +27,26 @@ export class LessonController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<Lesson> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Lesson> {
     return this.lessonService.getLessonById(id);
+  }
+
+    // Endpoint to get lessons by assessmentId
+  @Get('assessment/:assessmentId')
+  async getLessonsByAssessmentId(@Param('assessmentId') assessmentId: number) {
+    return await this.lessonService.getLessonsByAssessmentId(assessmentId);
   }
 
   @Put(':id')
   async update(
-    @Param('id') id: number,
-    @Body('title') title: string,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateData: Partial<CreateLessonDto>,
   ): Promise<Lesson> {
-    return this.lessonService.updateLesson(id, title);
+    return this.lessonService.updateLesson(id, updateData);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<void> {
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.lessonService.deleteLesson(id);
   }
 }

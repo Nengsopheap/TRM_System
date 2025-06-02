@@ -212,15 +212,15 @@
 ###
 
 ### Create a LearnTip (ensure Toptip with ID 2 exists)
-POST http://localhost:3000/learntip
-Content-Type: application/json
+# POST http://localhost:3000/learntip
+# Content-Type: application/json
 
-{
-  "title": "Set up and perform regular backups",
-  "description": "Never worry about losing files again",
-  "case": "Case study: The importance of backing up your devices. The Croft family's home computer was hacked by cybercriminals and infected with ransomware. Tanya's teenage son Ben was using the computer to do an assignment. During his research he downloaded many files and documents. When he tried to open them later, he noticed that the files didn't have the usual file extension. Realising it was a cyber attack, Tanya didn't pay the ransom. She followed the Australian Signals Directorate’s Australian Cyber Security Centre's (ASD’s ACSC) ransomware emergency response guide and reported the incident straight away through ASD's ACSC’s ReportCyber. Tanya was able to use a backup drive to restore the family's files. But as it had been a few weeks since the last backup, some important files like Ben's assignment were gone. This case shows why it's important to back up your devices often or turn on automatic backups. It's the best way to protect yourself from ransomware and other online threats.",
-  "toptipId": 2
-}
+# {
+#   "title": "Set up and perform regular backups",
+#   "description": "Never worry about losing files again",
+#   "case": "Case study: The importance of backing up your devices. The Croft family's home computer was hacked by cybercriminals and infected with ransomware. Tanya's teenage son Ben was using the computer to do an assignment. During his research he downloaded many files and documents. When he tried to open them later, he noticed that the files didn't have the usual file extension. Realising it was a cyber attack, Tanya didn't pay the ransom. She followed the Australian Signals Directorate’s Australian Cyber Security Centre's (ASD’s ACSC) ransomware emergency response guide and reported the incident straight away through ASD's ACSC’s ReportCyber. Tanya was able to use a backup drive to restore the family's files. But as it had been a few weeks since the last backup, some important files like Ben's assignment were gone. This case shows why it's important to back up your devices often or turn on automatic backups. It's the best way to protect yourself from ransomware and other online threats.",
+#   "toptipId": 2
+# }
 
 
 ###
@@ -248,3 +248,49 @@ Content-Type: application/json
 
 ### Delete LearnTip by ID
 # DELETE http://localhost:3000/learntip/3
+
+
+### 📌 After creating, copy the `id` from the response and use it below.
+### Create a lesson
+# POST http://localhost:3000/lessons
+# Content-Type: application/json
+
+# {
+#   "assessment_id": 3,
+#   "title_en": "What is Cybersecurity?",
+#   "title_kh": "ការណែនាំអំពី AI",
+#   "title_answer_en": "Cybersecurity is the practice of protecting systems, networks, and data from cyber threats such as hacking, malware, phishing, and unauthorized access. It ensures confidentiality, integrity, and availability of digital information.",
+#   "title_answer_kh": "AI មានន័យថា បញ្ញាសិប្បនិម្មិត។",
+#   "description_en": "This lesson explains AI basics.",
+#   "description_kh": "មេរៀននេះពន្យល់អំពីមូលដ្ឋានរបស់ AI។",
+#   "content_en": "Content in English",
+#   "content_kh": "មាតិកាជាភាសាខ្មែរ"
+# }
+
+### Get all lessons
+# GET http://localhost:3000/lessons
+
+### Get a lesson by ID
+# GET http://localhost:3000/lessons/2
+
+# curl -X GET "http://localhost:3000/lessons/assessment/1"
+
+
+### Update a lesson
+PUT http://localhost:3000/lessons/2
+Content-Type: application/json
+
+{
+  "assessment_id": 3,
+  "title_en": "What is Cybersecurity?",
+  "title_kh": "ការណែនាំអំពី AI",
+  "title_answer_en": "Cybersecurity is the practice of protecting systems, networks, and data from cyber threats such as hacking, malware, phishing, and unauthorized access. It ensures confidentiality, integrity, and availability of digital information.",
+  "title_answer_kh": "AI មានន័យថា បញ្ញាសិប្បនិម្មិត។",
+  "description_en": "Updating your device and applications can fix issues and address new  security concerns. Updates can also add new features to your app or  device.Regular updates are critical in maintaining a secure system. It's  important to check for any updates and make sure that automatic updates  are switched on. Cyber criminals hack devices by using known weaknesses in systems or  apps. Updates have security upgrades to fix these weaknesses. You can  turn on automatic updates so that this happens without your input.",
+  "description_kh": "មេរៀននេះពន្យល់អំពីមូលដ្ឋានរបស់ AI។",
+  "content_en": "Updates are one of the strongest defences in your security toolkit",
+  "content_kh": "ការអាប់ដេត គឺជាវិធីការពារដ៏ខ្លាំងមួយក្នុងឧបករណ៍សុវត្ថិភាពរបស់អ្នក។"
+}
+
+### Delete a lesson
+# DELETE http://localhost:3000/lessons/1
