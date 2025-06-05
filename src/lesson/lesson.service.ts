@@ -20,12 +20,40 @@ export class LessonService {
       assessment_id,
       title_en,
       title_kh,
+      title1_en,
+      title2_en,
+      title1_kh,
+      title2_kh,
       description_en,
       description_kh,
       content_en,
       content_kh,
       title_answer_en,
       title_answer_kh,
+      title1_answer_en,
+      title1_answer_kh,
+      title2_answer_en,
+      title2_answer_kh,
+      tip3_en,
+      tip3_kh,
+      tip4_en,
+      tip4_kh,
+      tip5_en,
+      tip5_kh,
+      tip1_en,
+      tip1_kh,
+      tip2_en,
+      tip2_kh,
+      tip1_answer_en,
+      tip1_answer_kh,
+      tip2_answer_en,
+      tip2_answer_kh,
+      tip3_answer_en,
+      tip3_answer_kh,
+      tip4_answer_en,
+      tip4_answer_kh,
+      tip5_answer_en,
+      tip5_answer_kh,
     } = createLessonDto;
 
     const assessment = await this.assessmentRepository.findOne({
@@ -37,12 +65,40 @@ export class LessonService {
     const lesson = this.lessonRepository.create({
       title_en,
       title_kh,
+      title1_en,
+      title2_en,
+      title1_kh,
+      title2_kh,
       description_en,
       description_kh,
       content_en,
       content_kh,
       title_answer_en,
       title_answer_kh,
+      title1_answer_en,
+      title1_answer_kh,
+      title2_answer_en,
+      title2_answer_kh,
+      tip3_en,
+      tip3_kh,
+      tip4_en,
+      tip4_kh,
+      tip5_en,
+      tip5_kh,
+      tip1_en,
+      tip1_kh,
+      tip2_en,
+      tip2_kh,
+      tip1_answer_en,
+      tip1_answer_kh,
+      tip2_answer_en,
+      tip2_answer_kh,
+      tip3_answer_en,
+      tip3_answer_kh,
+      tip4_answer_en,
+      tip4_answer_kh,
+      tip5_answer_en,
+      tip5_answer_kh,
       assessment,
     });
 
@@ -65,20 +121,21 @@ export class LessonService {
   }
 
   async getLessonsByAssessmentId(assessmentId: number): Promise<Lesson[]> {
-  const lessons = await this.lessonRepository.find({
-    where: {
-      assessment: { id: assessmentId },
-    },
-    relations: ['assessment'],
-  });
+    const lessons = await this.lessonRepository.find({
+      where: {
+        assessment: { id: assessmentId },
+      },
+      relations: ['assessment'],
+    });
 
-  if (!lessons || lessons.length === 0) {
-    throw new NotFoundException(`No lessons found for Assessment with ID ${assessmentId}`);
+    if (!lessons || lessons.length === 0) {
+      throw new NotFoundException(
+        `No lessons found for Assessment with ID ${assessmentId}`,
+      );
+    }
+
+    return lessons;
   }
-
-  return lessons;
-}
-
 
   async updateLesson(
     id: number,

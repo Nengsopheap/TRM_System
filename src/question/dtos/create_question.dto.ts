@@ -5,12 +5,17 @@ import {
   IsNumber,
   IsBoolean,
   IsOptional,
+  IsIn,
 } from 'class-validator';
 
 export class CreateQuestionDto {
   @IsNotEmpty()
   @IsString()
   question_text: string;
+
+  @IsOptional()
+  @IsIn(['easy', 'medium', 'hard'])
+  category?: string;
 
   @IsNotEmpty()
   @IsNumber()
@@ -29,7 +34,7 @@ export class CreateQuestionDto {
   @IsBoolean()
   is_multiple_choice?: boolean;
 
-   @IsBoolean()
+  @IsBoolean()
   @IsOptional()
   is_yes_no?: boolean;
 }

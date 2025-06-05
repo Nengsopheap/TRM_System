@@ -7,7 +7,7 @@ export class CreateAssessmentDto {
 
   @IsOptional()
   @IsInt()
-  parent_id: number | null;
+  description: string;
 
   @IsOptional()
   created_at?: Date;

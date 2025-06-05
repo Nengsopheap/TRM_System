@@ -38,23 +38,29 @@ export class AuthService {
   }
   
 
-  async login(email: string, password: string) {
-    const user = await this.validateUserRole(email, password);
-    const payload = { email: user.email, role: user.role };
+async login(email: string, password: string) {
+  const user = await this.validateUserRole(email, password);
+const payload = { user_id: user.id, email: user.email, role: user.role };
 
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
 
-  async validateToken(token: string) {
-    try {
-      const payload = this.jwtService.verify(token);
-      return payload ? { email: payload.email, role: payload.role } : null;
-    } catch (e) {
-      return null;
-    }
+return {
+  access_token: this.jwtService.sign(payload),
+};
+
+}
+
+
+async validateToken(token: string) {
+  try {
+    const payload = this.jwtService.verify(token);
+    return payload
+      ? { user_id: payload.user_id, email: payload.email, role: payload.role }
+      : null;
+  } catch (e) {
+    return null;
   }
+}
+
 
   logout(token: string) {
     this.blacklistedTokens.add(token);

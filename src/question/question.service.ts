@@ -38,6 +38,7 @@ export class QuestionsService {
       points = 1,
       is_multiple_choice = false,
       is_yes_no = false,
+      category = 'easy', // default category
     } = createQuestionDto;
 
     try {
@@ -57,6 +58,7 @@ export class QuestionsService {
         points,
         is_multiple_choice,
         is_yes_no,
+        category, // Add category here
       });
 
       // Save the Question entity to the database
@@ -112,86 +114,90 @@ export class QuestionsService {
   }
 
   // Update a question and its options
-async updateQuestion(id: number, updateData: Partial<CreateQuestionDto>): Promise<Question> {
-  const question = await this.questionsRepository.findOne({
-    where: { id },
-    relations: ['options', 'assessment'],
-  });
-
-  if (!question) {
-    throw new NotFoundException(`Question with ID ${id} not found`);
-  }
-
-  if (updateData.question_text !== undefined) {
-    question.question_text = updateData.question_text;
-  }
-
-  if (updateData.points !== undefined) {
-    question.points = updateData.points;
-  }
-
-  if (updateData.is_multiple_choice !== undefined) {
-    question.is_multiple_choice = updateData.is_multiple_choice;
-  }
-
-  if (updateData.is_yes_no !== undefined) {
-    question.is_yes_no = updateData.is_yes_no;
-  }
-
-  if (updateData.assessment_id) {
-    const assessment = await this.assessmentsRepository.findOne({
-      where: { id: updateData.assessment_id },
+  async updateQuestion(
+    id: number,
+    updateData: Partial<CreateQuestionDto>,
+  ): Promise<Question> {
+    const question = await this.questionsRepository.findOne({
+      where: { id },
+      relations: ['options', 'assessment'],
     });
-    if (!assessment) throw new NotFoundException('Assessment not found');
-    question.assessment = assessment;
+
+    if (!question) {
+      throw new NotFoundException(`Question with ID ${id} not found`);
+    }
+
+    if (updateData.question_text !== undefined) {
+      question.question_text = updateData.question_text;
+    }
+
+    if (updateData.points !== undefined) {
+      question.points = updateData.points;
+    }
+
+    if (updateData.is_multiple_choice !== undefined) {
+      question.is_multiple_choice = updateData.is_multiple_choice;
+    }
+
+    if (updateData.is_yes_no !== undefined) {
+      question.is_yes_no = updateData.is_yes_no;
+    }
+
+    if (updateData.assessment_id) {
+      const assessment = await this.assessmentsRepository.findOne({
+        where: { id: updateData.assessment_id },
+      });
+      if (!assessment) throw new NotFoundException('Assessment not found');
+      question.assessment = assessment;
+    }
+
+    // Optional: Update options if provided
+    if (updateData.options && updateData.options.length > 0) {
+      // Remove existing options
+      await this.optionsRepository.delete({ question: { id } });
+
+      // Add new options
+      const newOptions = updateData.options.map((opt) =>
+        this.optionsRepository.create({
+          option_text: opt.option_text,
+          is_correct: opt.is_correct,
+          question,
+        }),
+      );
+      await this.optionsRepository.save(newOptions);
+
+      // Update correct_option_id(s)
+      if (question.is_yes_no) {
+        const correct = newOptions.find((o) => o.is_correct);
+        question.correct_option_id = correct?.option_text ?? '';
+      } else if (question.is_multiple_choice) {
+        question.correct_option_ids = newOptions
+          .filter((o) => o.is_correct)
+          .map((o) => o.id);
+      } else {
+        const correct = newOptions.find((o) => o.is_correct);
+        question.correct_option_id = correct?.id ?? null;
+      }
+    }
+
+    return this.questionsRepository.save(question);
   }
 
-  // Optional: Update options if provided
-  if (updateData.options && updateData.options.length > 0) {
-    // Remove existing options
+  // Delete a question and its options
+  async deleteQuestion(id: number): Promise<{ message: string }> {
+    const question = await this.questionsRepository.findOne({ where: { id } });
+    if (!question) {
+      throw new NotFoundException(`Question with ID ${id} not found`);
+    }
+
+    // Delete related options first due to foreign key constraints
     await this.optionsRepository.delete({ question: { id } });
 
-    // Add new options
-    const newOptions = updateData.options.map((opt) =>
-      this.optionsRepository.create({
-        option_text: opt.option_text,
-        is_correct: opt.is_correct,
-        question,
-      }),
-    );
-    await this.optionsRepository.save(newOptions);
+    // Delete the question itself
+    await this.questionsRepository.delete(id);
 
-    // Update correct_option_id(s)
-    if (question.is_yes_no) {
-      const correct = newOptions.find((o) => o.is_correct);
-      question.correct_option_id = correct?.option_text ?? '';
-    } else if (question.is_multiple_choice) {
-      question.correct_option_ids = newOptions.filter(o => o.is_correct).map(o => o.id);
-    } else {
-      const correct = newOptions.find((o) => o.is_correct);
-      question.correct_option_id = correct?.id ?? null;
-    }
+    return { message: 'Question deleted successfully' };
   }
-
-  return this.questionsRepository.save(question);
-}
-
-// Delete a question and its options
-async deleteQuestion(id: number): Promise<{ message: string }> {
-  const question = await this.questionsRepository.findOne({ where: { id } });
-  if (!question) {
-    throw new NotFoundException(`Question with ID ${id} not found`);
-  }
-
-  // Delete related options first due to foreign key constraints
-  await this.optionsRepository.delete({ question: { id } });
-
-  // Delete the question itself
-  await this.questionsRepository.delete(id);
-
-  return { message: 'Question deleted successfully' };
-}
-
 
   // Submit an answer for a question
   async submitAnswer(
@@ -329,7 +335,9 @@ async deleteQuestion(id: number): Promise<{ message: string }> {
     });
   }
   async getAllQuestions(): Promise<Question[]> {
-    return this.questionsRepository.find({ relations: ['options', 'assessment'] }); // Add relations if you want options too
+    return this.questionsRepository.find({
+      relations: ['options', 'assessment'],
+    }); // Add relations if you want options too
   }
 
   // Validate the user's answer
@@ -362,15 +370,14 @@ async deleteQuestion(id: number): Promise<{ message: string }> {
     const assessment = await this.assessmentsRepository.findOne({
       where: { id: assessment_id },
     });
-  
+
     if (!assessment) {
       throw new NotFoundException('Assessment not found');
     }
-  
+
     return this.questionsRepository.find({
       where: { assessment: { id: assessment_id } },
       relations: ['options', 'assessment'], // include relations if needed
     });
   }
-  
 }

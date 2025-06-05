@@ -11,8 +11,7 @@ export class Assessment {
   name: string;
 
   @Column({ nullable: true })
-  parent_id: number | null;
-
+  description: string;
   @OneToMany(() => Question, (question) => question.assessment)
   questions: Question[]; // This is the reverse side of the relationship to Question
   @OneToMany(() => UserScore, (userScore) => userScore.assessment)

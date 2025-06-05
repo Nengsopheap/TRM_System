@@ -16,6 +16,9 @@ export class Question {
   @Column()
   question_text: string;
 
+  @Column({ default: 'easy' }) // or numeric if you prefer
+  category: string;
+
   @OneToMany(() => Option, (option) => option.question, { cascade: true })
   options: Option[];
 
@@ -31,7 +34,7 @@ export class Question {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  @Column( 'json',{ nullable: true })
+  @Column('json', { nullable: true })
   correct_option_id: string | number;
 
   @Column('simple-array', { nullable: true })
@@ -40,9 +43,9 @@ export class Question {
   @Column({ default: false })
   is_multiple_choice: boolean;
 
-  @Column({ default: false }) 
+  @Column({ default: false })
   is_yes_no: boolean;
 
-  @Column('float', { default: 1 })  
+  @Column('float', { default: 1 })
   points: number;
 }
