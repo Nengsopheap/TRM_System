@@ -58,7 +58,7 @@ export class QuestionsService {
         points,
         is_multiple_choice,
         is_yes_no,
-        category, // Add category here
+        category, 
       });
 
       // Save the Question entity to the database
@@ -73,29 +73,20 @@ export class QuestionsService {
         });
         return option;
       });
-
-      // Save options to the database
       await this.optionsRepository.save(optionsEntities);
-
-      // For Yes/No questions, adjust the logic to set the correct_option_id to "Yes" or "No"
       if (is_yes_no) {
         const correctOption = optionsEntities.find((opt) => opt.is_correct);
 
-        // Ensure there are exactly 2 options: Yes and No
         if (optionsEntities.length !== 2) {
           throw new Error('Yes/No questions must have exactly two options');
         }
-
-        // Set correct_option_id based on the correct option text ("Yes" or "No")
         if (correctOption) {
-          question.correct_option_id = correctOption.option_text; // Use the option text (either "Yes" or "No")
+          question.correct_option_id = correctOption.option_text; 
         }
       } else if (is_multiple_choice) {
-        // For multiple-choice, set `correct_option_ids` as an array of correct option IDs
         const correctOptions = optionsEntities.filter((opt) => opt.is_correct);
-        question.correct_option_ids = correctOptions.map((opt) => opt.id); // Store all correct options
+        question.correct_option_ids = correctOptions.map((opt) => opt.id);
       } else {
-        // For single-choice, set the correct option ID
         const correctOption = optionsEntities.find((opt) => opt.is_correct);
         if (correctOption) {
           question.correct_option_id = correctOption.id;
@@ -286,13 +277,11 @@ export class QuestionsService {
         });
       }
 
-      // ✅ FIXED: Handle the correct percentage and wrong percentage separately for multiple-choice vs single-choice questions.
+
       let correctPercentage: number;
       let wrongPercentage: number;
-
-      // If it's a single-choice question, we increment the total quizzes count
       if (!question.is_multiple_choice) {
-        userScore.total_quizzes += 1; // Increment only for single-choice quizzes
+        userScore.total_quizzes += 1; 
       }
 
       const totalAnswers = userScore.correct_answers + userScore.wrong_answers;
