@@ -27,8 +27,8 @@
 # }
 
 # ### LOGOUT - Use the token received above for this step
-POST http://localhost:3000/auth/logout
-Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxOSwiZW1haWwiOiJ1c2VyMTIzNEBnbWFpbC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc0OTcxMDAxNywiZXhwIjoxNzQ5NzEzNjE3fQ.inqpAHv6THbGKdfX50PgFSDMZY-ctsFvb428eMfLGek"
+# POST http://localhost:3000/auth/logout
+# Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxOSwiZW1haWwiOiJ1c2VyMTIzNEBnbWFpbC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc0OTcxMDAxNywiZXhwIjoxNzQ5NzEzNjE3fQ.inqpAHv6THbGKdfX50PgFSDMZY-ctsFvb428eMfLGek"
 
 # curl -X GET http://localhost:3000/users/all -H "Content-Type: application/json"
 
@@ -161,10 +161,37 @@ Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImeyJhbG
 #   "user_id": 1
 # }
 
+PUT http://localhost:3000/questions/7
+Content-Type: application/json
+
+{
+  "question_text": "What color is the sky on a clear day?",
+  "assessment_id": 5,
+  "points": 2,
+  "is_multiple_choice": false,
+  "is_yes_no": false,
+  "category": "medium",
+  "options": [
+    {
+      "option_text": "Blue",
+      "is_correct": true
+    },
+    {
+      "option_text": "Green",
+      "is_correct": false
+    },
+    {
+      "option_text": "Red",
+      "is_correct": false
+    }
+  ]
+}
+
+
 # curl -X GET http://localhost:3000/questions
 # -H "Content-Type: application/json"
 
-# curl http://localhost:3000/questions/3
+# curl http://localhost:3000/questions/5
 
 
 
