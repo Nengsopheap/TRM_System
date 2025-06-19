@@ -20,18 +20,20 @@ export class AuthController {
 
   @Post('logout')
   async logout(@Req() request: Request) {
-    const authorizationHeader = request.headers['authorization']; // Get the authorization header
+    const authorizationHeader = request.headers['authorization'];
     if (!authorizationHeader) {
       throw new UnauthorizedException('No token provided');
     }
 
-    const token = authorizationHeader.split(' ')[1]; // Extract token from "Bearer <token>"
-
+    const token = authorizationHeader.split(' ')[1];
     if (!token) {
       throw new UnauthorizedException('Wrong token');
     }
 
-    this.authService.logout(token); // Blacklist the token
+    this.authService.logout(token);
+
+    console.log('✅ User logged out successfully. Token blacklisted:', token);
+
     return { message: 'Logged out successfully' };
   }
 }
