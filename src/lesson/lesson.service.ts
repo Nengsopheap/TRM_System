@@ -128,12 +128,6 @@ export class LessonService {
       relations: ['assessment'],
     });
 
-    if (!lessons || lessons.length === 0) {
-      throw new NotFoundException(
-        `No lessons found for Assessment with ID ${assessmentId}`,
-      );
-    }
-
     return lessons;
   }
 

@@ -8,10 +8,11 @@ import { Answer } from './entity/submit_answer_entity';
 import { Assessment } from './../assessment/entity/assessment.entity';
 import { User } from 'src/users/entity/users.entity';
 import { UserScore } from 'src/users/entity/user_score.entity';
+import { Course } from 'src/course/entity/course.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Question, Option, Answer, Assessment, User, UserScore]),
+    TypeOrmModule.forFeature([Question, Option, Answer, Assessment, User, UserScore, Course]),
   ],
   controllers: [QuestionsController],
   providers: [QuestionsService],

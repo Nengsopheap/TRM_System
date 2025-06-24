@@ -161,31 +161,31 @@
 #   "user_id": 1
 # }
 
-PUT http://localhost:3000/questions/7
-Content-Type: application/json
+# PUT http://localhost:3000/questions/7
+# Content-Type: application/json
 
-{
-  "question_text": "What color is the sky on a clear day?",
-  "assessment_id": 5,
-  "points": 2,
-  "is_multiple_choice": false,
-  "is_yes_no": false,
-  "category": "medium",
-  "options": [
-    {
-      "option_text": "Blue",
-      "is_correct": true
-    },
-    {
-      "option_text": "Green",
-      "is_correct": false
-    },
-    {
-      "option_text": "Red",
-      "is_correct": false
-    }
-  ]
-}
+# {
+#   "question_text": "What color is the sky on a clear day?",
+#   "assessment_id": 5,
+#   "points": 2,
+#   "is_multiple_choice": false,
+#   "is_yes_no": false,
+#   "category": "medium",
+#   "options": [
+#     {
+#       "option_text": "Blue",
+#       "is_correct": true
+#     },
+#     {
+#       "option_text": "Green",
+#       "is_correct": false
+#     },
+#     {
+#       "option_text": "Red",
+#       "is_correct": false
+#     }
+#   ]
+# }
 
 
 # curl -X GET http://localhost:3000/questions
@@ -376,3 +376,69 @@ Content-Type: application/json
 
 ### Delete a lesson
 # DELETE http://localhost:3000/lessons/1
+
+
+
+
+
+# for test recommemndation
+
+### Create a new Course linked to an Assessment
+# POST http://localhost:3000/courses
+# Content-Type: application/json
+
+# {
+#   "title": "Cyber Security Basics",
+#   "assessmentId": 5,
+#   "description": "Introductory Cyber Security course",
+#   "level": "beginner",
+#   "course_url": "https://example.com/cyber-security-basics"
+# }
+
+# POST http://localhost:3000/courses
+# Content-Type: application/json
+
+# {
+#   "title": "Cyber Security Basics",
+#   "assessmentId": 5,
+#   "description": "Introductory Cyber Security coursedfdfd",
+#   "level": "advanced",
+#   "course_url": "https://example.com/cyber-security-basics"
+# }
+POST http://localhost:3000/courses
+Content-Type: application/json
+
+{
+  "title": "Cyber Security Basics",
+  "assessmentId": 5,
+  "description": "Introductory Cyber Security coursedhello",
+  "level": "intermediate",
+  "course_url": "https://example.com/cyber-security-basics"
+}
+
+# POST http://localhost:3000/questions
+# Content-Type: application/json
+
+# {
+#   "question_text": "What is phishing?",
+#   "assessment_id": 5,
+#   "points": 5,
+#   "is_multiple_choice": false,
+#   "options": [
+#     { "option_text": "A type of cyber attack", "is_correct": true },
+#     { "option_text": "A cooking method", "is_correct": false }
+#   ]
+# }
+
+# POST http://localhost:3000/questions/submit-answer
+# Content-Type: application/json
+
+# {
+#   "question_id": 87,
+#   "option_ids": [213],
+#   "user_id": 1
+# }
+
+# GET http://localhost:3000/courses?assessmentId=5
+# Content-Type: application/json
+

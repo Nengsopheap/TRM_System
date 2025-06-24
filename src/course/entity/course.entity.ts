@@ -4,9 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
+  ManyToOne,
 } from 'typeorm';
-import { Lesson } from 'src/lesson/entity/lesson.entity';
+import { Assessment } from 'src/assessment/entity/assessment.entity';
 
 @Entity()
 export class Course {
@@ -15,9 +15,23 @@ export class Course {
 
   @Column()
   title: string;
-  
-  // @OneToMany(() => Lesson, (lesson) => lesson.course)
-  // lessons: Lesson[];
+
+  @Column({ nullable: true })
+  description?: string;
+
+  @Column({ default: 'beginner' })
+  level: string;
+
+  @Column({ default: true })
+  is_active: boolean;
+
+  @Column({ nullable: true })
+  course_url?: string;
+
+  @ManyToOne(() => Assessment, (assessment) => assessment.courses, {
+    eager: true,
+  })
+  assessment: Assessment;
 
   @CreateDateColumn()
   created_at: Date;

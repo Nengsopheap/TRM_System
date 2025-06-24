@@ -15,7 +15,7 @@ import { LessonController } from './lesson/lesson.controller';
 import { LessonModule } from './lesson/lesson.module';
 import { Lesson } from './lesson/entity/lesson.entity';
 import { CourseModule } from './course/course.module';
-import { Course } from './course/Entity/course.entity';
+import { Course } from './course/entity/course.entity'; // ✅ correct (lowercase "e")
 import { PostModule } from './post/post.module';
 import { Post } from './post/entity/post.entity';
 import { ToptipModule } from './toptip/toptip.module';

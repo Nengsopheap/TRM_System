@@ -1,37 +1,50 @@
-// src/course/course.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Course } from './Entity/course.entity';
+import { Course } from './entity/course.entity';
 import { CreateCourseDto } from './dtos/create-course.dto';
-// import { UpdateCourseDto } from './dtos/update-course.dto';
+import { Assessment } from 'src/assessment/entity/assessment.entity';
 
 @Injectable()
 export class CourseService {
   constructor(
     @InjectRepository(Course)
     private courseRepository: Repository<Course>,
+
+    @InjectRepository(Assessment)
+    private assessmentRepository: Repository<Assessment>,
   ) {}
 
-  create(createCourseDto: CreateCourseDto) {
-    const course = this.courseRepository.create(createCourseDto);
+  async create(createCourseDto: CreateCourseDto) {
+    const { title, assessmentId, description, level, course_url } = createCourseDto;
+
+    const assessment = await this.assessmentRepository.findOne({
+      where: { id: assessmentId },
+    });
+
+    if (!assessment) {
+      throw new NotFoundException('Assessment not found');
+    }
+
+    const course = this.courseRepository.create({
+      title,
+      assessment,
+      description,
+      level: level || 'beginner',
+      course_url,
+      is_active: true,
+    });
+
     return this.courseRepository.save(course);
   }
 
   findAll() {
-    return this.courseRepository.find({ relations: ['lessons'] });
+    return this.courseRepository.find();
   }
 
   findOne(id: number) {
-    return this.courseRepository.findOne({
-      where: { id },
-      relations: ['lessons'],
-    });
+    return this.courseRepository.findOne({ where: { id } });
   }
-
-  //   update(id: number, updateCourseDto: UpdateCourseDto) {
-  //     return this.courseRepository.update(id, updateCourseDto);
-  //   }
 
   remove(id: number) {
     return this.courseRepository.delete(id);

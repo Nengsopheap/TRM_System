@@ -9,6 +9,7 @@ import { Answer } from './entity/submit_answer_entity';
 import { Assessment } from './../assessment/entity/assessment.entity';
 import { User } from 'src/users/entity/users.entity';
 import { UserScore } from 'src/users/entity/user_score.entity';
+import { Course } from 'src/course/entity/course.entity';
 
 @Injectable()
 export class QuestionsService {
@@ -28,6 +29,8 @@ export class QuestionsService {
     private readonly usersRepository: Repository<User>,
     @InjectRepository(UserScore)
     private readonly userScoreRepository: Repository<UserScore>,
+    @InjectRepository(Course)
+    private readonly courseRepository: Repository<Course>,
   ) {}
 
   async create(createQuestionDto: CreateQuestionDto): Promise<Question> {
@@ -191,120 +194,135 @@ export class QuestionsService {
   }
 
   // Submit an answer for a question
-  async submitAnswer(
-    question_id: number,
-    option_ids: number[], // Accept multiple option IDs
-    user_id: number,
-  ): Promise<{
-    correct: boolean;
-    points: number;
-    correctPercentage: number;
-    wrongPercentage: number;
-  }> {
-    try {
-      console.log(
-        'Submitting answer for question:',
-        question_id,
-        'with options:',
-        option_ids,
-        'and user:',
-        user_id,
-      );
+async submitAnswer(
+  question_id: number,
+  option_ids: number[], // Accept multiple option IDs
+  user_id: number,
+): Promise<{
+  correct: boolean;
+  points: number;
+  correctPercentage: number;
+  wrongPercentage: number;
+  recommendedCourse?: Course;
+}> {
+  try {
+    // Fetch the question with relations
+    const question = await this.questionsRepository.findOne({
+      where: { id: question_id },
+      relations: ['options', 'assessment'],
+    });
 
-      // Fetch the question with relations
-      const question = await this.questionsRepository.findOne({
-        where: { id: question_id },
-        relations: ['options', 'assessment'],
+    if (!question) throw new NotFoundException('Question not found');
+    if (!question.assessment)
+      throw new NotFoundException('Assessment not found for this question');
+
+    // Fetch selected options
+    const selectedOptions = await this.optionsRepository.find({
+      where: { id: In(option_ids), question: { id: question_id } },
+    });
+
+    if (selectedOptions.length === 0)
+      throw new NotFoundException('No valid options found for this question');
+
+    const correctOptions = question.options.filter((opt) => opt.is_correct);
+    const correctSelected = selectedOptions.filter((opt) => opt.is_correct).length;
+    const totalCorrect = correctOptions.length;
+
+    const pointsAwarded =
+      totalCorrect > 0
+        ? (correctSelected / totalCorrect) * question.points
+        : 0;
+
+    const user = await this.usersRepository.findOne({
+      where: { id: user_id },
+    });
+    if (!user) throw new NotFoundException('User not found');
+
+    for (const option of selectedOptions) {
+      const answer = this.answersRepository.create({
+        question,
+        option,
+        user,
+        is_correct: option.is_correct,
       });
-
-      if (!question) throw new NotFoundException('Question not found');
-      if (!question.assessment)
-        throw new NotFoundException('Assessment not found for this question');
-
-      // Fetch selected options
-      const selectedOptions = await this.optionsRepository.find({
-        where: { id: In(option_ids), question: { id: question_id } },
-      });
-
-      if (selectedOptions.length === 0)
-        throw new NotFoundException('No valid options found for this question');
-
-      const correctOptions = question.options.filter((opt) => opt.is_correct);
-      const correctSelected = selectedOptions.filter(
-        (opt) => opt.is_correct,
-      ).length;
-      const totalCorrect = correctOptions.length;
-
-      const pointsAwarded =
-        totalCorrect > 0
-          ? (correctSelected / totalCorrect) * question.points
-          : 0;
-
-      const user = await this.usersRepository.findOne({
-        where: { id: user_id },
-      });
-      if (!user) throw new NotFoundException('User not found');
-
-      for (const option of selectedOptions) {
-        const answer = this.answersRepository.create({
-          question,
-          option,
-          user,
-          is_correct: option.is_correct,
-        });
-        await this.answersRepository.save(answer);
-      }
-
-      let userScore = await this.userScoreRepository.findOne({
-        where: {
-          user: { id: user_id },
-          assessment: { id: question.assessment.id },
-        },
-      });
-
-      if (userScore) {
-        userScore.score += pointsAwarded;
-        userScore.correct_answers += correctSelected;
-        userScore.wrong_answers += selectedOptions.length - correctSelected;
-      } else {
-        userScore = this.userScoreRepository.create({
-          user,
-          assessment: question.assessment,
-          score: pointsAwarded,
-          correct_answers: correctSelected,
-          wrong_answers: selectedOptions.length - correctSelected,
-          total_quizzes: 0, // Start total quizzes from 0 and count only after each quiz is answered
-        });
-      }
-
-
-      let correctPercentage: number;
-      let wrongPercentage: number;
-      if (!question.is_multiple_choice) {
-        userScore.total_quizzes += 1; 
-      }
-
-      const totalAnswers = userScore.correct_answers + userScore.wrong_answers;
-
-      correctPercentage =
-        totalAnswers > 0 ? (userScore.correct_answers / totalAnswers) * 100 : 0;
-      wrongPercentage =
-        totalAnswers > 0 ? (userScore.wrong_answers / totalAnswers) * 100 : 0;
-
-      userScore.percentage = correctPercentage;
-      await this.userScoreRepository.save(userScore);
-
-      return {
-        correct: correctSelected === totalCorrect,
-        points: pointsAwarded,
-        correctPercentage,
-        wrongPercentage,
-      };
-    } catch (error) {
-      console.error('Error saving answer:', error);
-      throw new Error('Error occurred while saving the answer');
+      await this.answersRepository.save(answer);
     }
+
+    let userScore = await this.userScoreRepository.findOne({
+      where: {
+        user: { id: user_id },
+        assessment: { id: question.assessment.id },
+      },
+    });
+
+    if (userScore) {
+      userScore.score += pointsAwarded;
+      userScore.correct_answers += correctSelected;
+      userScore.wrong_answers += selectedOptions.length - correctSelected;
+    } else {
+      userScore = this.userScoreRepository.create({
+        user,
+        assessment: question.assessment,
+        score: pointsAwarded,
+        correct_answers: correctSelected,
+        wrong_answers: selectedOptions.length - correctSelected,
+        total_quizzes: 0,
+      });
+    }
+
+    if (!question.is_multiple_choice) {
+      userScore.total_quizzes += 1;
+    }
+
+    const totalAnswers = userScore.correct_answers + userScore.wrong_answers;
+
+    const correctPercentage =
+      totalAnswers > 0 ? (userScore.correct_answers / totalAnswers) * 100 : 0;
+    const wrongPercentage =
+      totalAnswers > 0 ? (userScore.wrong_answers / totalAnswers) * 100 : 0;
+
+    userScore.percentage = correctPercentage;
+    await this.userScoreRepository.save(userScore);
+
+    // Recommend a course based on score & assessment
+console.log('Assessment ID:', question.assessment.id);
+console.log('Correct Percentage:', correctPercentage);
+console.log('Level to query:', 
+  correctPercentage >= 85 ? 'advanced' :
+  correctPercentage >= 60 ? 'intermediate' :
+  'beginner'
+);
+
+const recommendedCourse = await this.courseRepository.findOne({
+  where: {
+    assessment: { id: question.assessment.id },
+    level:
+      correctPercentage >= 85
+        ? 'advanced'
+        : correctPercentage >= 60
+        ? 'intermediate'
+        : 'beginner',
+    is_active: true,
+  },
+});
+
+console.log('Recommended Course:', recommendedCourse);
+
+
+
+    return {
+      correct: correctSelected === totalCorrect,
+      points: pointsAwarded,
+      correctPercentage,
+      wrongPercentage,
+      recommendedCourse,
+    };
+  } catch (error) {
+    console.error('Error saving answer:', error);
+    throw new Error('Error occurred while saving the answer');
   }
+}
+
 
   // New method to find all submitted answers
   async findAllSubmitAnswers(): Promise<any[]> {
