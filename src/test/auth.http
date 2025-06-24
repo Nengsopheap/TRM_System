@@ -383,13 +383,13 @@
 
 # for test recommemndation
 
-### Create a new Course linked to an Assessment
+## Create a new Course linked to an Assessment
 # POST http://localhost:3000/courses
 # Content-Type: application/json
 
 # {
 #   "title": "Cyber Security Basics",
-#   "assessmentId": 5,
+#   "assessmentId": 3,
 #   "description": "Introductory Cyber Security course",
 #   "level": "beginner",
 #   "course_url": "https://example.com/cyber-security-basics"
@@ -400,21 +400,22 @@
 
 # {
 #   "title": "Cyber Security Basics",
-#   "assessmentId": 5,
+#   "assessmentId": 3,
 #   "description": "Introductory Cyber Security coursedfdfd",
 #   "level": "advanced",
 #   "course_url": "https://example.com/cyber-security-basics"
 # }
-POST http://localhost:3000/courses
-Content-Type: application/json
 
-{
-  "title": "Cyber Security Basics",
-  "assessmentId": 5,
-  "description": "Introductory Cyber Security coursedhello",
-  "level": "intermediate",
-  "course_url": "https://example.com/cyber-security-basics"
-}
+# POST http://localhost:3000/courses
+# Content-Type: application/json
+
+# {
+#   "title": "Cyber Security Basics",
+#   "assessmentId": 3,
+#   "description": "Introductory Cyber Security coursedhello",
+#   "level": "intermediate",
+#   "course_url": "https://example.com/cyber-security-basics"
+# }
 
 # POST http://localhost:3000/questions
 # Content-Type: application/json
@@ -442,3 +443,18 @@ Content-Type: application/json
 # GET http://localhost:3000/courses?assessmentId=5
 # Content-Type: application/json
 
+POST http://localhost:3000/questions/submit-answer
+Content-Type: application/json
+
+[
+  {
+    "question_id": 89,
+    "option_ids": [218],
+    "user_id": 3
+  },
+  {
+    "question_id": 90,
+    "option_ids": [220],
+    "user_id": 3
+  }
+]

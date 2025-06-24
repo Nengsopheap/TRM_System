@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import UserScore from './user_score.entity';
+import { Answer } from 'src/question/entity/submit_answer_entity'; // ✅ adjust this path as needed
 
 export enum UserRole {
   USER = 'user',
@@ -22,4 +23,7 @@ export class User {
 
   @OneToMany(() => UserScore, (userScore) => userScore.user)
   scores: UserScore[];
+
+  @OneToMany(() => Answer, (answer) => answer.user)
+  answers: Answer[];
 }

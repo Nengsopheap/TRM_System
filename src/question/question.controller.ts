@@ -32,18 +32,42 @@ export class QuestionsController {
     return this.questionsService.deleteQuestion(id);
   }
   // Endpoint for submitting the answer
-  @Post('submit-answer')
-  async submitAnswer(
-    @Body()
-    body: {
-      question_id: number;
-      option_ids: number[];
-      user_id: number;
-    },
-  ): Promise<any> {
+@Post('submit-answer')
+@UsePipes(new ValidationPipe({ transform: true }))
+async submitAnswer(
+  @Body()
+  body:
+    | {
+        question_id: number;
+        option_ids: number[];
+        user_id: number;
+      }
+    | {
+        question_id: number;
+        option_ids: number[];
+        user_id: number;
+      }[],
+): Promise<any> {
+  if (Array.isArray(body)) {
+    // Handle multiple submissions
+    const results = [];
+    for (const submission of body) {
+      const { question_id, option_ids, user_id } = submission;
+      const result = await this.questionsService.submitAnswer(
+        question_id,
+        option_ids,
+        user_id,
+      );
+      results.push(result);
+    }
+    return results;
+  } else {
+    // Handle single submission
     const { question_id, option_ids, user_id } = body;
     return this.questionsService.submitAnswer(question_id, option_ids, user_id);
   }
+}
+
 
   // New endpoint for finding all submitted answers
   @Get('all')

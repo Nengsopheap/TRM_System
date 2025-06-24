@@ -19,10 +19,9 @@ export class Answer {
 
   @ManyToOne(() => Option, (option) => option.answers, { onDelete: 'CASCADE' })
   option: Option;
-  
 
-  @ManyToOne(() => Option, (option) => option.answers)
-  @JoinColumn({ name: 'user_id' })
+  @ManyToOne(() => User, (user) => user.answers, { onDelete: 'CASCADE' }) 
+  @JoinColumn({ name: 'user_id' }) // ✅ This is fine now
   user: User;
 
   @Column()
@@ -31,3 +30,4 @@ export class Answer {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 }
+
