@@ -450,11 +450,11 @@ Content-Type: application/json
   {
     "question_id": 89,
     "option_ids": [218],
-    "user_id": 3
+    "user_id": 1
   },
   {
     "question_id": 90,
     "option_ids": [220],
-    "user_id": 3
+    "user_id": 1
   }
 ]

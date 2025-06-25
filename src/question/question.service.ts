@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Question } from './entity/question.entity';
@@ -10,7 +14,7 @@ import { Assessment } from './../assessment/entity/assessment.entity';
 import { User } from 'src/users/entity/users.entity';
 import { UserScore } from 'src/users/entity/user_score.entity';
 import { Course } from 'src/course/entity/course.entity';
-
+import { UserQuizAttempt } from './entity/UserQuizAttempt.entity'; // Adjust this path as needed
 @Injectable()
 export class QuestionsService {
   constructor(
@@ -31,6 +35,9 @@ export class QuestionsService {
     private readonly userScoreRepository: Repository<UserScore>,
     @InjectRepository(Course)
     private readonly courseRepository: Repository<Course>,
+
+    @InjectRepository(UserQuizAttempt)
+    private readonly userQuizAttemptRepository: Repository<UserQuizAttempt>, // Adjust this path as needed
   ) {}
 
   async create(createQuestionDto: CreateQuestionDto): Promise<Question> {
@@ -61,7 +68,7 @@ export class QuestionsService {
         points,
         is_multiple_choice,
         is_yes_no,
-        category, 
+        category,
       });
 
       // Save the Question entity to the database
@@ -84,7 +91,7 @@ export class QuestionsService {
           throw new Error('Yes/No questions must have exactly two options');
         }
         if (correctOption) {
-          question.correct_option_id = correctOption.option_text; 
+          question.correct_option_id = correctOption.option_text;
         }
       } else if (is_multiple_choice) {
         const correctOptions = optionsEntities.filter((opt) => opt.is_correct);
@@ -194,135 +201,132 @@ export class QuestionsService {
   }
 
   // Submit an answer for a question
-async submitAnswer(
-  question_id: number,
-  option_ids: number[], // Accept multiple option IDs
-  user_id: number,
-): Promise<{
-  correct: boolean;
-  points: number;
-  correctPercentage: number;
-  wrongPercentage: number;
-  recommendedCourse?: Course;
-}> {
-  try {
-    // Fetch the question with relations
-    const question = await this.questionsRepository.findOne({
-      where: { id: question_id },
-      relations: ['options', 'assessment'],
+  async submitAnswersBatch(
+    answersData: {
+      question_id: number;
+      option_ids: number[];
+      user_id: number;
+    }[],
+  ): Promise<{
+    user_id: number;
+    score: number;
+    correctAnswers: number;
+    wrongAnswers: number;
+    percentage: number;
+    totalQuizzes: number;
+    recommendedCourse?: Course;
+  }> {
+    if (!answersData.length) throw new Error('No answers provided');
+
+    // Load first question to get assessment
+    const firstQuestion = await this.questionsRepository.findOne({
+      where: { id: answersData[0].question_id },
+      relations: ['assessment', 'options'],
     });
+    if (!firstQuestion) throw new NotFoundException('Question not found');
+    if (!firstQuestion.assessment)
+      throw new NotFoundException('Assessment not found');
 
-    if (!question) throw new NotFoundException('Question not found');
-    if (!question.assessment)
-      throw new NotFoundException('Assessment not found for this question');
-
-    // Fetch selected options
-    const selectedOptions = await this.optionsRepository.find({
-      where: { id: In(option_ids), question: { id: question_id } },
-    });
-
-    if (selectedOptions.length === 0)
-      throw new NotFoundException('No valid options found for this question');
-
-    const correctOptions = question.options.filter((opt) => opt.is_correct);
-    const correctSelected = selectedOptions.filter((opt) => opt.is_correct).length;
-    const totalCorrect = correctOptions.length;
-
-    const pointsAwarded =
-      totalCorrect > 0
-        ? (correctSelected / totalCorrect) * question.points
-        : 0;
-
+    // Load user
     const user = await this.usersRepository.findOne({
-      where: { id: user_id },
+      where: { id: answersData[0].user_id },
     });
     if (!user) throw new NotFoundException('User not found');
 
-    for (const option of selectedOptions) {
-      const answer = this.answersRepository.create({
-        question,
-        option,
-        user,
-        is_correct: option.is_correct,
+    // Create a new UserQuizAttempt
+    const quizAttempt = this.userQuizAttemptRepository.create({
+      user,
+      assessment: firstQuestion.assessment,
+      score: 0,
+      correct_answers: 0,
+      wrong_answers: 0,
+      percentage: 0,
+      total_quizzes: answersData.length,
+    });
+    await this.userQuizAttemptRepository.save(quizAttempt);
+
+    let totalScore = 0;
+    let totalCorrect = 0;
+    let totalWrong = 0;
+
+    // Process each question submission
+    for (const answerData of answersData) {
+      const question = await this.questionsRepository.findOne({
+        where: { id: answerData.question_id },
+        relations: ['options'],
       });
-      await this.answersRepository.save(answer);
+      if (!question) continue;
+
+      const selectedOptions = await this.optionsRepository.find({
+        where: {
+          id: In(answerData.option_ids),
+          question: { id: question.id },
+        },
+      });
+
+      const correctOptions = question.options.filter((opt) => opt.is_correct);
+      const correctSelected = selectedOptions.filter(
+        (opt) => opt.is_correct,
+      ).length;
+      const totalCorrectOptions = correctOptions.length;
+
+      const pointsAwarded =
+        totalCorrectOptions > 0
+          ? (correctSelected / totalCorrectOptions) * question.points
+          : 0;
+
+      totalScore += pointsAwarded;
+      totalCorrect += correctSelected;
+      totalWrong += selectedOptions.length - correctSelected;
+
+      // Save each answer linked to the quizAttempt
+      for (const option of selectedOptions) {
+        const answer = this.answersRepository.create({
+          question,
+          option,
+          user,
+          quizAttempt,
+          is_correct: option.is_correct,
+        });
+        await this.answersRepository.save(answer);
+      }
     }
 
-    let userScore = await this.userScoreRepository.findOne({
+    const totalAnswered = totalCorrect + totalWrong;
+    const correctPercentage =
+      totalAnswered > 0 ? (totalCorrect / totalAnswered) * 100 : 0;
+
+    // Update quizAttempt with final stats
+    quizAttempt.score = totalScore;
+    quizAttempt.correct_answers = totalCorrect;
+    quizAttempt.wrong_answers = totalWrong;
+    quizAttempt.percentage = correctPercentage;
+    await this.userQuizAttemptRepository.save(quizAttempt);
+
+    // Recommend a course based on score & assessment
+    const recommendedCourse = await this.courseRepository.findOne({
       where: {
-        user: { id: user_id },
-        assessment: { id: question.assessment.id },
+        assessment: { id: firstQuestion.assessment.id },
+        level:
+          correctPercentage >= 85
+            ? 'advanced'
+            : correctPercentage >= 60
+              ? 'intermediate'
+              : 'beginner',
+        is_active: true,
       },
     });
 
-    if (userScore) {
-      userScore.score += pointsAwarded;
-      userScore.correct_answers += correctSelected;
-      userScore.wrong_answers += selectedOptions.length - correctSelected;
-    } else {
-      userScore = this.userScoreRepository.create({
-        user,
-        assessment: question.assessment,
-        score: pointsAwarded,
-        correct_answers: correctSelected,
-        wrong_answers: selectedOptions.length - correctSelected,
-        total_quizzes: 0,
-      });
-    }
-
-    if (!question.is_multiple_choice) {
-      userScore.total_quizzes += 1;
-    }
-
-    const totalAnswers = userScore.correct_answers + userScore.wrong_answers;
-
-    const correctPercentage =
-      totalAnswers > 0 ? (userScore.correct_answers / totalAnswers) * 100 : 0;
-    const wrongPercentage =
-      totalAnswers > 0 ? (userScore.wrong_answers / totalAnswers) * 100 : 0;
-
-    userScore.percentage = correctPercentage;
-    await this.userScoreRepository.save(userScore);
-
-    // Recommend a course based on score & assessment
-console.log('Assessment ID:', question.assessment.id);
-console.log('Correct Percentage:', correctPercentage);
-console.log('Level to query:', 
-  correctPercentage >= 85 ? 'advanced' :
-  correctPercentage >= 60 ? 'intermediate' :
-  'beginner'
-);
-
-const recommendedCourse = await this.courseRepository.findOne({
-  where: {
-    assessment: { id: question.assessment.id },
-    level:
-      correctPercentage >= 85
-        ? 'advanced'
-        : correctPercentage >= 60
-        ? 'intermediate'
-        : 'beginner',
-    is_active: true,
-  },
-});
-
-console.log('Recommended Course:', recommendedCourse);
-
-
-
     return {
-      correct: correctSelected === totalCorrect,
-      points: pointsAwarded,
-      correctPercentage,
-      wrongPercentage,
+      user_id: user.id,
+      score: totalScore,
+      correctAnswers: totalCorrect,
+      wrongAnswers: totalWrong,
+      percentage: correctPercentage,
+      totalQuizzes: answersData.length,
       recommendedCourse,
     };
-  } catch (error) {
-    console.error('Error saving answer:', error);
-    throw new Error('Error occurred while saving the answer');
   }
-}
-
 
   // New method to find all submitted answers
   async findAllSubmitAnswers(): Promise<any[]> {
@@ -387,4 +391,5 @@ console.log('Recommended Course:', recommendedCourse);
       relations: ['options', 'assessment'], // include relations if needed
     });
   }
+
 }

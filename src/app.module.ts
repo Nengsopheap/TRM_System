@@ -22,6 +22,7 @@ import { ToptipModule } from './toptip/toptip.module';
 import { Toptip } from './toptip/entity/toptip.entity';
 import { LearnTipModule } from './learntip/learntip.module';
 import { LearnTip } from './learntip/entity/learntoptip.entity';
+import { UserQuizAttempt } from './question/entity/UserQuizAttempt.entity'; // Adjust this path as needed
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { LearnTip } from './learntip/entity/learntoptip.entity';
         Post,
         Toptip,
         LearnTip,
+        UserQuizAttempt,
       ],
       synchronize: true,
     }),

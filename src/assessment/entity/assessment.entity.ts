@@ -3,7 +3,7 @@ import { Question } from './../../question/entity/question.entity';
 import { UserScore } from './../../users/entity/user_score.entity';
 import { Lesson } from './../../lesson/entity/lesson.entity'
 import { Course } from 'src/course/entity/course.entity';  // Make sure path is exact
-
+import { UserQuizAttempt } from 'src/question/entity/UserQuizAttempt.entity'; // Adjust this path as needed
 @Entity()
 export class Assessment {
   @PrimaryGeneratedColumn()
@@ -23,6 +23,9 @@ export class Assessment {
   lessons: Lesson[];
   @OneToMany(() => Course, (course) => course.assessment)
   courses: Course[];
+
+  @OneToMany(() => UserQuizAttempt, (attempt) => attempt.assessment)
+quizAttempts: UserQuizAttempt[];
 
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

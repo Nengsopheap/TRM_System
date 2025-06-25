@@ -9,10 +9,11 @@ import { Assessment } from './../assessment/entity/assessment.entity';
 import { User } from 'src/users/entity/users.entity';
 import { UserScore } from 'src/users/entity/user_score.entity';
 import { Course } from 'src/course/entity/course.entity';
+import { UserQuizAttempt } from './entity/UserQuizAttempt.entity'; // Adjust this path as needed
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Question, Option, Answer, Assessment, User, UserScore, Course]),
+    TypeOrmModule.forFeature([Question, Option, Answer, Assessment, User, UserScore, Course, UserQuizAttempt]),
   ],
   controllers: [QuestionsController],
   providers: [QuestionsService],

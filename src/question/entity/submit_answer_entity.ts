@@ -8,7 +8,7 @@ import {
 import { Question } from './question.entity';
 import { Option } from './option.entity';
 import { User } from 'src/users/entity/users.entity'; 
-
+import { UserQuizAttempt } from 'src/question/entity/UserQuizAttempt.entity'; // Adjust this path as needed
 @Entity()
 export class Answer {
   @PrimaryGeneratedColumn()
@@ -23,6 +23,9 @@ export class Answer {
   @ManyToOne(() => User, (user) => user.answers, { onDelete: 'CASCADE' }) 
   @JoinColumn({ name: 'user_id' }) // ✅ This is fine now
   user: User;
+
+  @ManyToOne(() => UserQuizAttempt, (attempt) => attempt.answers)
+quizAttempt: UserQuizAttempt;
 
   @Column()
   is_correct: boolean;
