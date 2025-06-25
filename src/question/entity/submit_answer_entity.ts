@@ -24,8 +24,9 @@ export class Answer {
   @JoinColumn({ name: 'user_id' }) // ✅ This is fine now
   user: User;
 
-  @ManyToOne(() => UserQuizAttempt, (attempt) => attempt.answers)
+@ManyToOne(() => UserQuizAttempt, (quizAttempt) => quizAttempt.answers)
 quizAttempt: UserQuizAttempt;
+
 
   @Column()
   is_correct: boolean;

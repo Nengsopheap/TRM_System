@@ -4,6 +4,7 @@ import { CreateQuestionDto } from './dtos/create_question.dto';
 import { SubmitAnswerDto } from './dtos/submit_answer.dto';
 import { Question } from './entity/question.entity';
 import { User } from 'src/users/entity/users.entity';
+import { UserQuizAttempt } from './entity/UserQuizAttempt.entity';
 
 import { UsePipes, ValidationPipe } from '@nestjs/common';
 // import { User } from 'src/users/entity/users.entity';
@@ -45,6 +46,11 @@ export class QuestionsController {
   async findAllSubmitAnswers(): Promise<any[]> {
     return this.questionsService.findAllSubmitAnswers();
   }
+
+  @Get('quiz-attempts')
+async getAllUserQuizAttempts(): Promise<UserQuizAttempt[]> {
+  return this.questionsService.getAllUserQuizAttempts();
+}
 
   @Get()
   async getAllQuestions(): Promise<Question[]> {

@@ -392,4 +392,18 @@ export class QuestionsService {
     });
   }
 
+async getAllUserQuizAttempts(): Promise<UserQuizAttempt[]> {
+  try {
+    const data = await this.userQuizAttemptRepository.find({
+      relations: ['user', 'assessment', 'answers'], // Check if any of these are causing it
+    });
+    return data;
+  } catch (error) {
+    console.error('❌ Error loading quiz attempts:', error);
+    throw new InternalServerErrorException('Failed to load quiz attempts');
+  }
+}
+
+
+
 }
