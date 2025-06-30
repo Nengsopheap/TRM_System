@@ -12,6 +12,9 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: true })
+  username: string;
+
   @Column({ unique: true })
   email: string;
 
@@ -25,7 +28,7 @@ export class User {
   scores: UserScore[];
 
   @OneToMany(() => UserQuizAttempt, (attempt) => attempt.user)
-quizAttempts: UserQuizAttempt[];
+  quizAttempts: UserQuizAttempt[];
 
   @OneToMany(() => Answer, (answer) => answer.user)
   answers: Answer[];

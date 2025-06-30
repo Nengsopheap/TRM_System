@@ -8,9 +8,20 @@ export class UsersController {
 
   @Post('create')
   async createUser(
-    @Body() body: { email: string; password: string; role: UserRole },
+    @Body()
+    body: {
+      email: string;
+      password: string;
+      role: UserRole;
+      username: string;
+    },
   ) {
-    return this.usersService.createUser(body.email, body.password, body.role);
+    return this.usersService.createUser(
+      body.email,
+      body.password,
+      body.role,
+      body.username,
+    );
   }
 
   @Get('all')

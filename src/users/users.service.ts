@@ -12,12 +12,18 @@ export class UsersService {
     @InjectRepository(UserScore) private userScoreRepo: Repository<UserScore>,
   ) {}
 
-  async createUser(email: string, password: string, role: UserRole) {
+  async createUser(
+    email: string,
+    password: string,
+    role: UserRole,
+    username?: string,
+  ): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = this.userRepo.create({
       email,
       password: hashedPassword,
       role,
+      username: username ?? 'DefaultUsername',
     });
     return this.userRepo.save(user);
   }
