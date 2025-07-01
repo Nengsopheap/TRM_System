@@ -6,6 +6,11 @@ export class Lesson {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: true })
+  name_en: string;
+  @Column({ nullable: true })
+  name_kh: string;
+
   @Column()
   title_en: string;
 
@@ -44,39 +49,62 @@ export class Lesson {
 
   @Column({ type: 'text', nullable: true })
   tip1_en: string;
+
   @Column({ type: 'text', nullable: true })
   tip1_kh: string;
 
   @Column({ type: 'text', nullable: true })
   tip2_en: string;
+
+  @Column({ type: 'text', nullable: true })
   tip2_kh: string;
 
   @Column({ type: 'text', nullable: true })
   tip3_en: string;
+
+  @Column({ type: 'text', nullable: true })
   tip3_kh: string;
 
   @Column({ type: 'text', nullable: true })
   tip4_en: string;
+
+  @Column({ type: 'text', nullable: true })
   tip4_kh: string;
 
   @Column({ type: 'text', nullable: true })
   tip5_en: string;
+
+  @Column({ type: 'text', nullable: true })
   tip5_kh: string;
 
   @Column({ type: 'text', nullable: true })
   tip1_answer_en: string;
+
+  @Column({ type: 'text', nullable: true })
   tip1_answer_kh: string;
+
   @Column({ type: 'text', nullable: true })
   tip2_answer_en: string;
+
+  @Column({ type: 'text', nullable: true })
   tip2_answer_kh: string;
+
   @Column({ type: 'text', nullable: true })
   tip3_answer_en: string;
+
+  @Column({ type: 'text', nullable: true })
   tip3_answer_kh: string;
+
   @Column({ type: 'text', nullable: true })
   tip4_answer_en: string;
+
+  @Column({ type: 'text', nullable: true })
   tip4_answer_kh: string;
+
   @Column({ type: 'text', nullable: true })
   tip5_answer_en: string;
+
+  @Column({ type: 'text', nullable: true })
   tip5_answer_kh: string;
 
   @Column({ type: 'text', nullable: true })

@@ -1,12 +1,12 @@
-POST http://localhost:3000/users/create
-Content-Type: application/json
+# POST http://localhost:3000/users/create
+# Content-Type: application/json
 
-{
-  "username": "Sopheap",
-  "email": "sopheap123@gmail.com",
-  "password": "sopheap123",
-  "role": "admin"
-}
+# {
+#   "username": "Sopheap",
+#   "email": "sopheap123@gmail.com",
+#   "password": "sopheap123",
+#   "role": "admin"
+# }
 
 # curl -X GET http://localhost:3000/users/all -H "Content-Type: application/json"
 
@@ -311,32 +311,7 @@ Content-Type: application/json
 # Content-Type: application/json
 
 # {
-#   "assessment_id": 3,
-#   "title_en": "What is Cybersecurity?",
-#   "title_kh": "ការណែនាំអំពី AI",
-#   "title_answer_en": "Cybersecurity is the practice of protecting systems, networks, and data from cyber threats such as hacking, malware, phishing, and unauthorized access. It ensures confidentiality, integrity, and availability of digital information.",
-#   "title_answer_kh": "AI មានន័យថា បញ្ញាសិប្បនិម្មិត។",
-#   "description_en": "This lesson explains AI basics.",
-#   "description_kh": "មេរៀននេះពន្យល់អំពីមូលដ្ឋានរបស់ AI។",
-#   "content_en": "Content in English",
-#   "content_kh": "មាតិកាជាភាសាខ្មែរ"
-# }
-
-### Get all lessons
-# GET http://localhost:3000/lessons
-
-### Get a lesson by ID
-# GET http://localhost:3000/lessons/2
-
-# curl -X GET "http://localhost:3000/lessons/assessment/1"
-
-
-### Update a lesson
-# PUT http://localhost:3000/lessons/2
-# Content-Type: application/json
-
-# {
-#   "assessment_id": 3,
+#   "assessment_id": 5,
 #   "title_en": "What is Cybersecurity?",
 #   "title_kh": "តើទៅជាសន្តិសុខសាយបឺរ?",
 #   "title1_en": "Why is it important?",
@@ -375,8 +350,63 @@ Content-Type: application/json
 #   "content_kh": "ការអាប់ដេត គឺជាវិធីការពារដ៏ខ្លាំងមួយក្នុងឧបករណ៍សុវត្ថិភាពរបស់អ្នក។"
 # }
 
+### Get all lessons
+# GET http://localhost:3000/lessons
+
+### Get a lesson by ID
+# GET http://localhost:3000/lessons/2
+
+# curl -X GET "http://localhost:3000/lessons/assessment/1"
+
+
+### Update a lesson
+# PUT http://localhost:3000/lessons/2
+# Content-Type: application/json
+
+# {
+#   "assessment_id": 3,
+#   "name_en": "Cyber Security ",
+#   "name_kh": "មូលដ្ឋានសន្តិសុខសាយបឺរ",
+#   "title_en": "What is Cybersecurity?",
+#   "title_kh": "តើទៅជាសន្តិសុខសាយបឺរ?",
+#   "title1_en": "Why is it important?",
+#   "title1_kh": "ហេតុអ្វីបានជាវាសំខាន់?",
+#   "title2_en": "What is Cybersecurity?",
+#   "title2_kh": "ការណែនាំអំពី AI",
+#   "title_answer_en": "Cybersecurity is the practice of protecting systems, networks, and data from cyber threats such as hacking, malware, phishing, and unauthorized access. It ensures confidentiality, integrity, and availability of digital information.",
+#   "title_answer_kh": "សន្តិសុខសាយបឺរគឺជាការអនុវត្តន៍ក្នុងការការពារប្រព័ន្ធ បណ្តាញ និងទិន្នន័យពីភាពគំរាមកំហែងសាយបឺរ ដូចជា ការជ្រៀតចូលខុសច្បាប់ កម្មវិធីវីរុស ការលួចព័ត៌មានតាមអ៊ីមែល និងការចូលប្រើដោយគ្មានការអនុញ្ញាត។ វាធានានូវភាពសម្ងាត់ ភាពត្រឹមត្រូវ និងភាពអាចប្រើបាននៃព័ត៌មានឌីជីថល។",
+#   "title1_answer_en": "Cyber security is important because smartphones, computers and the internet are now such a fundamental part of modern life, that it's difficult to imagine how we'd function without them. From online banking and shopping, to email and social media, it's more important than ever to take steps that can prevent cyber criminals getting hold of our accounts, data, and devices.",
+#   "title1_answer_kh": "សន្តិសុខសាយបឺរគឺសំខាន់ ពីព្រោះទូរស័ព្ទដៃ កុំព្យូទ័រ និងអ៊ីនធឺណិត បានក្លាយជាផ្នែកមួយសំខាន់នៃជីវិតប្រចាំថ្ងៃដែលមនុស្សមិនអាចខ្វះបាន។ ចាប់ពីការធ្វើបញ្ជាទិញទំនិញតាមអនឡាញ និងធ្វើហិរញ្ញវត្ថុ តាមអ៊ិនធឺណិត រហូតដល់ការប្រើប្រាស់អ៊ីមែល និងបណ្ដាញសង្គម វាសំខាន់ជាងពេលណាមកហើយក្នុងការរក្សាសុវត្ថិភាព ដើម្បីការពារខ្លួនមិនឲ្យជនល្មើសបច្ចេកវិទ្យាយកបាននូវគណនី ទិន្នន័យ និងឧបករណ៍របស់យើង។",
+#   "title2_answer_en": "Cybersecurity is the practice of protecting systems, networks, and data from cyber threats such as hacking, malware, phishing, and unauthorized access. It ensures confidentiality, integrity, and availability of digital information.",
+#   "title2_answer_kh": "AI មានន័យថា បញ្ញាសិប្បនិម្មិត។",
+#   "tip1_en": "1. Use Strong & Unique Passwords",
+#   "tip1_kh": "1. ប្រើពាក្យសម្ងាត់ដ៏រឹងមាំ និងមាន",
+#   "tip2_en": "2. Enable Multi-Factor Authentication (MFA)",
+#   "tip2_kh": "2. បើកការផ្ទៀងផ្ទាត់ពីរបីជំហាន (MFA)",
+#   "tip3_en": "3. Use a Secure Network",
+#   "tip3_kh": "3. ប្រើបណ្តាញសុវត្ថិភាព",
+#   "tip4_en": "4. Think Before You Click or Download",
+#   "tip4_kh": "4. គិតមុនពេលចុច ឬទាញយក",
+#   "tip5_en": "5. Keep Your Software Updated",
+#   "tip5_kh": "5. រក្សាទុកកម្មវិធីរបស់អ្នកឲ្យទាន់សម័យ",
+#   "tip1_answer_en": "Use strong and unique passwords for each of your accounts. Avoid using easily guessable information like birthdays or common words. Consider using a password manager to help you create and store complex passwords securely.",
+#   "tip1_answer_kh": "ប្រើពាក្យសម្ងាត់ដ៏រឹងមាំ និងមានលក្ខណៈពិសេសសម្រាប់គណនីរបស់អ្នក។ ជៀសវាងការប្រើប្រាស់ព័ត៌មានដែលងាយស្រួលទាក់ទងដូចជាថ្ងៃខែឆ្នាំកំណើត ឬពាក្យធម្មតា។ ពិចារណាប្រើកម្មវិធីគ្រប់គ្រងពាក្យសម្ងាត់ដើម្បីជួយអ្នកបង្កើត និងរក្សាទុកពាក្យសម្ងាត់ស្មុគស្មាញយ៉ាងសុវត្ថិភាព។",
+#   "tip2_answer_en": "Enable Multi-Factor Authentication (MFA) on your accounts whenever possible. MFA adds an extra layer of security by requiring a second form of verification, such as a code sent to your phone or email, in addition to your password.",
+#   "tip2_answer_kh": "បើកការផ្ទៀងផ្ទាត់ពីរបីជំហាន (MFA) នៅលើគណនីរបស់អ្នកនៅពេលដែលអាចធ្វើទៅបាន។ MFA បន្ថែមស្រទាប់សុវត្ថិភាពបន្ថែមដោយទាមទារឱ្យមានរបៀបផ្ទៀងផ្ទាត់ទីពីរមួយ ដូចជាកូដដែលផ្ញើទៅទូរស័ព្ទឬអ៊ីមែលរបស់អ្នក ជាមួយនឹងពាក្យសម្ងាត់របស់អ្នក។",
+#   "tip3_answer_en": "Always use a secure and trusted network, especially when accessing sensitive information. Avoid using public Wi-Fi networks for important transactions, as they can be less secure.",
+#   "tip3_answer_kh": "តែងតែប្រើបណ្តាញសុវត្ថិភាព និងទុកចិត្តបាន ជាពិសេសពេលចូលប្រើព័ត៌មានសំខាន់ៗ។ ជៀសវាងការប្រើប្រាស់បណ្តាញ Wi-Fi សាធារណៈសម្រាប់ប្រតិបត្តិការសំខាន់ៗ ពីព្រោះវាអាចមានសុវត្ថិភាពទាប។",
+#   "tip4_answer_en": "Be cautious when clicking on links or downloading files from unknown sources. Cybercriminals often use phishing tactics to trick you into revealing personal information or downloading malware.",
+#   "tip4_answer_kh": "ប្រុងប្រយ័ត្នពេលចុចលើតំណ ឬទាញយកឯកសារពីប្រភពដែលមិនស្គាល់។ ជនល្មើសបច្ចេកវិទ្យាច្រើនដាក់ពាក្យបន្លំដើម្បីបោកអ្នកឲ្យបង្ហាញព័ត៌មានផ្ទាល់ខ្លួន ឬទាញយកកម្មវិធីវីរុស។",
+#   "tip5_answer_en": "Regularly update your software, including operating systems, applications, and antivirus programs. Updates often include security patches that fix vulnerabilities and protect against new threats.",
+#   "tip5_answer_kh": "ការអាប់ដេត គឺជាវិធីការពារដ៏ខ្លាំងមួយក្នុងឧបករណ៍សុវត្ថិភាពរបស់អ្នក។ ការអាប់ដេតជាប្រចាំនឹងធ្វើឲ្យកម្មវិធីរបស់អ្នកទាន់សម័យ រួមទាំងប្រព័ន្ធប្រតិបត្តិការ កម្មវិធី និងកម្មវិធីប្រឆាំងវីរុស។ ការអាប់ដេតទូទៅមានកូដជួសជុលសុវត្ថិភាពដែលជួសជុលចំណុចខ្សោយ និងការពារការគំរាមកំហែងថ្មីៗ។",
+#   "description_en": "This lesson explains AI basics.",
+#   "description_kh": "មេរៀននេះពន្យល់អំពីមូលដ្ឋានរបស់ AI។",
+#   "content_en": "Cybersecurity is the practice of protecting systems, networks, and data from online threats. It plays a critical role in maintaining information security.",
+#   "content_kh": "សន្តិសុខសាយបឺរគឺជាការការពារប្រព័ន្ធ បណ្តាញ និងទិន្នន័យពីគ្រោះថ្នាក់តាមអ៊ីនធឺណិត។ វាជាចំណេះដឹងសំខាន់ក្នុងការអភិរក្សសុវត្ថិភាពព័ត៌មាន។"
+# }
+
 ### Delete a lesson
-# DELETE http://localhost:3000/lessons/1
+# DELETE http://localhost:3000/lessons/5
 
 
 
@@ -389,9 +419,9 @@ Content-Type: application/json
 # Content-Type: application/json
 
 # {
-#   "title": "Cyber Security Basics",
-#   "assessmentId": 3,
-#   "description": "Introductory Cyber Security course",
+#   "title": "បញ្ញាសិប្បនិម្មិត (AI)",
+#   "assessmentId": 5,
+#   "description": "បញ្ញាសិប្បនិម្មិតគឺជាបច្ចេកវិទ្យាដែលអាចអោយម៉ាស៊ីនសម្រេចចិត្តដូចមនុស្ស។ វាត្រូវបានប្រើនៅក្នុងឧបករណ៍ឆ្លាតវៃ និងការព្យាករណ៍។",
 #   "level": "beginner",
 #   "course_url": "https://example.com/cyber-security-basics"
 # }
@@ -400,23 +430,23 @@ Content-Type: application/json
 # Content-Type: application/json
 
 # {
-#   "title": "Cyber Security Basics",
-#   "assessmentId": 3,
-#   "description": "Introductory Cyber Security coursedfdfd",
+#   "title": "បញ្ញាសិប្បនិម្មិត (AI)",
+#   "assessmentId": 5,
+#   "description": "AI (Artificial Intelligence) គឺជាបច្ចេកវិទ្យាដែលផ្ដល់សមត្ថភាពឲ្យកុំព្យូទ័រ ឬម៉ាស៊ីនអាចគិត សម្រេចចិត្ត ឬស្វ័យប្រវត្តិដូចមនុស្សបាន។ for advance",
 #   "level": "advanced",
 #   "course_url": "https://example.com/cyber-security-basics"
 # }
 
-# POST http://localhost:3000/courses
-# Content-Type: application/json
+POST http://localhost:3000/courses
+Content-Type: application/json
 
-# {
-#   "title": "Cyber Security Basics",
-#   "assessmentId": 3,
-#   "description": "Introductory Cyber Security coursedhello",
-#   "level": "intermediate",
-#   "course_url": "https://example.com/cyber-security-basics"
-# }
+{
+  "title": "បញ្ញាសិប្បនិម្មិត (AI)",
+  "assessmentId": 5,
+  "description": "AI (Artificial Intelligence) គឺជាបច្ចេកវិទ្យាដែលផ្ដល់សមត្ថភាពឲ្យកុំព្យូទ័រ ឬម៉ាស៊ីនអាចគិត សម្រេចចិត្ត ឬស្វ័យប្រវត្តិដូចមនុស្សបាន។ for intermediate",
+  "level": "intermediate",
+  "course_url": "https://example.com/cyber-security-basics"
+}
 
 # POST http://localhost:3000/questions
 # Content-Type: application/json
@@ -441,7 +471,7 @@ Content-Type: application/json
 #   "user_id": 1
 # }
 
-# GET http://localhost:3000/courses?assessmentId=5
+# GET http://localhost:3000/courses?assessmentId=3
 # Content-Type: application/json
 
 # POST http://localhost:3000/questions/submit-answer

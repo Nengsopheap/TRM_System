@@ -18,6 +18,8 @@ export class LessonService {
   async createLesson(createLessonDto: CreateLessonDto): Promise<Lesson> {
     const {
       assessment_id,
+      name_en,
+      name_kh,
       title_en,
       title_kh,
       title1_en,
@@ -63,6 +65,8 @@ export class LessonService {
     if (!assessment) throw new NotFoundException('Assessment not found');
 
     const lesson = this.lessonRepository.create({
+      name_en,
+      name_kh,
       title_en,
       title_kh,
       title1_en,

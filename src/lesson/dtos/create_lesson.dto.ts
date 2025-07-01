@@ -1,6 +1,11 @@
 import { IsString, IsInt, IsOptional } from 'class-validator';
 
 export class CreateLessonDto {
+  @IsOptional()
+  @IsString()
+  name_en?: string;
+  name_kh?: string;
+
   @IsString()
   title_en: string;
   title_kh: string;
