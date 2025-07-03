@@ -27,7 +27,9 @@ export class User {
   @OneToMany(() => UserScore, (userScore) => userScore.user)
   scores: UserScore[];
 
-  @OneToMany(() => UserQuizAttempt, (attempt) => attempt.user)
+  @OneToMany(() => UserQuizAttempt, (attempt) => attempt.user, {
+    onDelete: 'CASCADE',  // <<< This fixes your FK violation on user_quiz_attempt
+  })
   quizAttempts: UserQuizAttempt[];
 
   @OneToMany(() => Answer, (answer) => answer.user)

@@ -40,6 +40,29 @@ export class UsersService {
     return this.userRepo.find();
   }
 
+  async updateUser(
+  id: number,
+  body: { email?: string; username?: string; role?: UserRole; password?: string }
+): Promise<User> {
+  const user = await this.userRepo.findOne({ where: { id } });
+  if (!user) throw new Error('User not found');
+
+  if (body.password) {
+    body.password = await bcrypt.hash(body.password, 10);
+  }
+
+  Object.assign(user, body); // update user fields
+  return this.userRepo.save(user);
+}
+
+
+  async deleteUser(id: number) {
+  const user = await this.userRepo.findOne({ where: { id } });
+  if (!user) throw new Error('User not found');
+  return this.userRepo.remove(user);
+}
+
+
   async findAllScores() {
     return this.userScoreRepo.find({
       relations: ['assessment', 'user'],

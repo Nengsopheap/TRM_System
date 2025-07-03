@@ -1,11 +1,23 @@
-# POST http://localhost:3000/users/create
+POST http://localhost:3000/users/create
+Content-Type: application/json
+
+{
+  "username": "Sopheap",
+  "email": "sopheap1234@gmail.com",
+  "password": "sopheap1234",
+  "role": "admin"
+}
+
+# DELETE http://localhost:3000/users/1
+
+# PUT http://localhost:3000/users/1
 # Content-Type: application/json
 
 # {
-#   "username": "Sopheap",
-#   "email": "sopheap123@gmail.com",
-#   "password": "sopheap123",
-#   "role": "admin"
+#   "username": "Sokha",
+#   "email": "Sokha@example.com",
+#   "password": "newpassword123",
+#   "role": "user"
 # }
 
 # curl -X GET http://localhost:3000/users/all -H "Content-Type: application/json"
@@ -475,20 +487,20 @@
 #    "tip4": " Join an AI Community or Forum Ask beginner questions on platforms like Reddit r/MachineLearning or Stack Overflow."
 # }
 
-PUT http://localhost:3000/courses/15
-Content-Type: application/json
+# PUT http://localhost:3000/courses/15
+# Content-Type: application/json
 
-{
-   "assessmentId": 5,
-   "title": "បញ្ញាសិប្បនិម្មិត (AI)",
-   "description": "A user at intermediate level likely has a solid foundation but isn’t ready for advanced yet. So your recommendations should:",
-   "level": "advanced",
-   "course_url": "https://www.youtube.com/watch?v=aircAruvnKk&list=PLZyvi_9gamL-EE3zQJbU5N3JKqZq3tNfa",
-   "tip1": "Start with Basic Machine Learning Concepts Learn what training data, models, and predictions mean. Try Google’s “Learn with Google AI”.",
-   "tip2": "Build Your First AI Model Use Google Colab or Kaggle Notebooks to build a simple ML model (e.g., Iris dataset).",
-   "tip3": "Understand AI Ethics and Bias Read about fairness in AI. Ask yourself: “Can AI make unfair decisions?” It’s a key part of being a responsible AI user.",
-   "tip4": "Teach Others What You Know Write a blog, create a short video, or explain AI to a friend. Teaching is a powerful way to learn."
-}
+# {
+#    "assessmentId": 5,
+#    "title": "បញ្ញាសិប្បនិម្មិត (AI)",
+#    "description": "A user at intermediate level likely has a solid foundation but isn’t ready for advanced yet. So your recommendations should:",
+#    "level": "advanced",
+#    "course_url": "https://www.youtube.com/watch?v=aircAruvnKk&list=PLZyvi_9gamL-EE3zQJbU5N3JKqZq3tNfa",
+#    "tip1": "Start with Basic Machine Learning Concepts Learn what training data, models, and predictions mean. Try Google’s “Learn with Google AI”.",
+#    "tip2": "Build Your First AI Model Use Google Colab or Kaggle Notebooks to build a simple ML model (e.g., Iris dataset).",
+#    "tip3": "Understand AI Ethics and Bias Read about fairness in AI. Ask yourself: “Can AI make unfair decisions?” It’s a key part of being a responsible AI user.",
+#    "tip4": "Teach Others What You Know Write a blog, create a short video, or explain AI to a friend. Teaching is a powerful way to learn."
+# }
 
 # POST http://localhost:3000/questions
 # Content-Type: application/json
