@@ -16,7 +16,17 @@ export class CourseService {
   ) {}
 
   async create(createCourseDto: CreateCourseDto) {
-    const { title, assessmentId, description, level, course_url } = createCourseDto;
+    const {
+      title,
+      assessmentId,
+      description,
+      level,
+      course_url,
+      tip1,
+      tip2,
+      tip3,
+      tip4,
+    } = createCourseDto;
 
     const assessment = await this.assessmentRepository.findOne({
       where: { id: assessmentId },
@@ -32,6 +42,10 @@ export class CourseService {
       description,
       level: level || 'beginner',
       course_url,
+      tip1,
+      tip2,
+      tip3,
+      tip4,
       is_active: true,
     });
 
@@ -39,28 +53,27 @@ export class CourseService {
   }
 
   async update(id: number, updateCourseDto: Partial<CreateCourseDto>) {
-  const course = await this.courseRepository.findOne({ where: { id } });
+    const course = await this.courseRepository.findOne({ where: { id } });
 
-  if (!course) {
-    throw new NotFoundException('Course not found');
-  }
-
-  if (updateCourseDto.assessmentId) {
-    const assessment = await this.assessmentRepository.findOne({
-      where: { id: updateCourseDto.assessmentId },
-    });
-
-    if (!assessment) {
-      throw new NotFoundException('Assessment not found');
+    if (!course) {
+      throw new NotFoundException('Course not found');
     }
 
-    course.assessment = assessment;
+    if (updateCourseDto.assessmentId) {
+      const assessment = await this.assessmentRepository.findOne({
+        where: { id: updateCourseDto.assessmentId },
+      });
+
+      if (!assessment) {
+        throw new NotFoundException('Assessment not found');
+      }
+
+      course.assessment = assessment;
+    }
+
+    Object.assign(course, updateCourseDto);
+    return this.courseRepository.save(course);
   }
-
-  Object.assign(course, updateCourseDto);
-  return this.courseRepository.save(course);
-}
-
 
   findAll() {
     return this.courseRepository.find();

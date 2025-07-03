@@ -15,9 +15,25 @@ export class CreateCourseDto {
 
   @IsString()
   @IsOptional()
-  level?: string;  // e.g. beginner, intermediate, advanced
+  level?: string; // e.g. beginner, intermediate, advanced
 
   @IsString()
   @IsOptional()
   course_url?: string;
+
+  @IsString()
+  @IsOptional()
+  tip1?: string;
+
+  @IsString()
+  @IsOptional()
+  tip2?: string;
+
+  @IsString()
+  @IsOptional()
+  tip3?: string;
+
+  @IsString()
+  @IsOptional()
+  tip4?: string;
 }

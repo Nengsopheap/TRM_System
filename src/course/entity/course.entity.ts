@@ -28,6 +28,18 @@ export class Course {
   @Column({ nullable: true })
   course_url?: string;
 
+  @Column({ nullable: true })
+  tip1: string;
+
+  @Column({ nullable: true })
+  tip2: string;
+
+  @Column({ nullable: true })
+  tip3: string;
+
+  @Column({ nullable: true })
+  tip4: string;
+
   @ManyToOne(() => Assessment, (assessment) => assessment.courses, {
     eager: true,
   })
