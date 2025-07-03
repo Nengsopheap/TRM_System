@@ -408,10 +408,6 @@
 ### Delete a lesson
 # DELETE http://localhost:3000/lessons/5
 
-
-
-
-
 # for test recommemndation
 
 ## Create a new Course linked to an Assessment
@@ -437,15 +433,27 @@
 #   "course_url": "https://example.com/cyber-security-basics"
 # }
 
-POST http://localhost:3000/courses
+# POST http://localhost:3000/courses
+# Content-Type: application/json
+
+# {
+#   "title": "បញ្ញាសិប្បនិម្មិត (AI)",
+#   "assessmentId": 5,
+#   "description": "AI (Artificial Intelligence) គឺជាបច្ចេកវិទ្យាដែលផ្ដល់សមត្ថភាពឲ្យកុំព្យូទ័រ ឬម៉ាស៊ីនអាចគិត សម្រេចចិត្ត ឬស្វ័យប្រវត្តិដូចមនុស្សបាន។ for intermediate",
+#   "level": "intermediate",
+#   "course_url": "https://example.com/cyber-security-basics"
+# }
+
+# for update couse recommentdation
+PUT http://localhost:3000/courses/16
 Content-Type: application/json
 
 {
-  "title": "បញ្ញាសិប្បនិម្មិត (AI)",
-  "assessmentId": 5,
-  "description": "AI (Artificial Intelligence) គឺជាបច្ចេកវិទ្យាដែលផ្ដល់សមត្ថភាពឲ្យកុំព្យូទ័រ ឬម៉ាស៊ីនអាចគិត សម្រេចចិត្ត ឬស្វ័យប្រវត្តិដូចមនុស្សបាន។ for intermediate",
-  "level": "intermediate",
-  "course_url": "https://example.com/cyber-security-basics"
+   "assessmentId": 5,
+   "title": "បញ្ញាសិប្បនិម្មិត (AI)",
+   "description": "A user at intermediate level likely has a solid foundation but isn’t ready for advanced yet. So your recommendations should:",
+   "level": "intermediate",
+   "course_url": "https://example.com/cyber-security-basics"
 }
 
 # POST http://localhost:3000/questions

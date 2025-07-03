@@ -38,6 +38,30 @@ export class CourseService {
     return this.courseRepository.save(course);
   }
 
+  async update(id: number, updateCourseDto: Partial<CreateCourseDto>) {
+  const course = await this.courseRepository.findOne({ where: { id } });
+
+  if (!course) {
+    throw new NotFoundException('Course not found');
+  }
+
+  if (updateCourseDto.assessmentId) {
+    const assessment = await this.assessmentRepository.findOne({
+      where: { id: updateCourseDto.assessmentId },
+    });
+
+    if (!assessment) {
+      throw new NotFoundException('Assessment not found');
+    }
+
+    course.assessment = assessment;
+  }
+
+  Object.assign(course, updateCourseDto);
+  return this.courseRepository.save(course);
+}
+
+
   findAll() {
     return this.courseRepository.find();
   }
