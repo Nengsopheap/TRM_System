@@ -115,74 +115,95 @@ export class QuestionsService {
   }
 
   // Update a question and its options
-  async updateQuestion(
-    id: number,
-    updateData: Partial<CreateQuestionDto>,
-  ): Promise<Question> {
-    const question = await this.questionsRepository.findOne({
-      where: { id },
-      relations: ['options', 'assessment'],
-    });
+async updateQuestion(
+  id: number,
+  updateData: Partial<CreateQuestionDto>,
+): Promise<Question> {
+  const question = await this.questionsRepository.findOne({
+    where: { id },
+    relations: ['options', 'assessment'],
+  });
 
-    if (!question) {
-      throw new NotFoundException(`Question with ID ${id} not found`);
-    }
-
-    if (updateData.question_text !== undefined) {
-      question.question_text = updateData.question_text;
-    }
-
-    if (updateData.points !== undefined) {
-      question.points = updateData.points;
-    }
-
-    if (updateData.is_multiple_choice !== undefined) {
-      question.is_multiple_choice = updateData.is_multiple_choice;
-    }
-
-    if (updateData.is_yes_no !== undefined) {
-      question.is_yes_no = updateData.is_yes_no;
-    }
-
-    if (updateData.assessment_id) {
-      const assessment = await this.assessmentsRepository.findOne({
-        where: { id: updateData.assessment_id },
-      });
-      if (!assessment) throw new NotFoundException('Assessment not found');
-      question.assessment = assessment;
-    }
-
-    // Optional: Update options if provided
-    if (updateData.options && updateData.options.length > 0) {
-      // Remove existing options
-      await this.optionsRepository.delete({ question: { id } });
-
-      // Add new options
-      const newOptions = updateData.options.map((opt) =>
-        this.optionsRepository.create({
-          option_text: opt.option_text,
-          is_correct: opt.is_correct,
-          question,
-        }),
-      );
-      await this.optionsRepository.save(newOptions);
-
-      // Update correct_option_id(s)
-      if (question.is_yes_no) {
-        const correct = newOptions.find((o) => o.is_correct);
-        question.correct_option_id = correct?.option_text ?? '';
-      } else if (question.is_multiple_choice) {
-        question.correct_option_ids = newOptions
-          .filter((o) => o.is_correct)
-          .map((o) => o.id);
-      } else {
-        const correct = newOptions.find((o) => o.is_correct);
-        question.correct_option_id = correct?.id ?? null;
-      }
-    }
-
-    return this.questionsRepository.save(question);
+  if (!question) {
+    throw new NotFoundException(`Question with ID ${id} not found`);
   }
+
+  // Update basic fields
+  if (updateData.question_text !== undefined) {
+    question.question_text = updateData.question_text;
+  }
+
+  if (updateData.points !== undefined) {
+    question.points = updateData.points;
+  }
+
+  if (updateData.is_multiple_choice !== undefined) {
+    question.is_multiple_choice = updateData.is_multiple_choice;
+  }
+
+  if (updateData.is_yes_no !== undefined) {
+    question.is_yes_no = updateData.is_yes_no;
+  }
+
+  if (updateData.category !== undefined) {
+    question.category = updateData.category;
+  }
+
+  if (updateData.assessment_id) {
+    const assessment = await this.assessmentsRepository.findOne({
+      where: { id: updateData.assessment_id },
+    });
+    if (!assessment) throw new NotFoundException('Assessment not found');
+    question.assessment = assessment;
+  }
+
+  // Handle options update
+  if (updateData.options && updateData.options.length > 0) {
+    // Delete old options
+    await this.optionsRepository.delete({ question: { id } });
+
+    // Create and save new options
+    const newOptions = updateData.options.map((opt) =>
+      this.optionsRepository.create({
+        option_text: opt.option_text,
+        is_correct: opt.is_correct,
+        question,
+      }),
+    );
+    await this.optionsRepository.save(newOptions);
+
+    // Assign correct option(s)
+    if (question.is_yes_no) {
+      if (newOptions.length !== 2) {
+        throw new Error('Yes/No questions must have exactly two options');
+      }
+      const correct = newOptions.find((o) => o.is_correct);
+      question.correct_option_id = correct?.id ?? null;
+      question.correct_option_ids = [];
+    } else if (question.is_multiple_choice) {
+      const correct = newOptions.filter((o) => o.is_correct);
+      question.correct_option_ids = correct.map((o) => o.id);
+      question.correct_option_id = null;
+    } else {
+      const correct = newOptions.find((o) => o.is_correct);
+      question.correct_option_id = correct?.id ?? null;
+      question.correct_option_ids = [];
+    }
+
+    // ✅ Save after assigning correct option(s)
+    await this.questionsRepository.save(question);
+  }
+
+  // Final save in case of any other updates
+  await this.questionsRepository.save(question);
+
+  // ✅ Return fresh copy with relations
+  return this.questionsRepository.findOne({
+    where: { id },
+    relations: ['options', 'assessment'],
+  });
+}
+
 
   // Delete a question and its options
   async deleteQuestion(id: number): Promise<{ message: string }> {
@@ -248,6 +269,7 @@ export class QuestionsService {
     let totalScore = 0;
     let totalCorrect = 0;
     let totalWrong = 0;
+    let fullyCorrectQuestions = 0;
 
     // Process each question submission
     for (const answerData of answersData) {
@@ -265,19 +287,25 @@ export class QuestionsService {
       });
 
       const correctOptions = question.options.filter((opt) => opt.is_correct);
-      const correctSelected = selectedOptions.filter(
-        (opt) => opt.is_correct,
-      ).length;
-      const totalCorrectOptions = correctOptions.length;
+      const selectedCorrect = selectedOptions.filter((opt) => opt.is_correct);
+      const selectedIncorrect = selectedOptions.filter(
+        (opt) => !opt.is_correct,
+      );
 
-      const pointsAwarded =
-        totalCorrectOptions > 0
-          ? (correctSelected / totalCorrectOptions) * question.points
-          : 0;
+      const isFullyCorrect =
+        selectedCorrect.length === correctOptions.length &&
+        selectedIncorrect.length === 0;
 
+      const pointsAwarded = isFullyCorrect ? question.points : 0;
       totalScore += pointsAwarded;
-      totalCorrect += correctSelected;
-      totalWrong += selectedOptions.length - correctSelected;
+
+      if (isFullyCorrect) {
+        totalCorrect += correctOptions.length;
+        fullyCorrectQuestions += 1;
+      } else {
+        totalCorrect += selectedCorrect.length;
+        totalWrong += selectedIncorrect.length;
+      }
 
       // Save each answer linked to the quizAttempt
       for (const option of selectedOptions) {
@@ -292,9 +320,11 @@ export class QuestionsService {
       }
     }
 
-    const totalAnswered = totalCorrect + totalWrong;
+    // Percentage based on fully correct questions
     const correctPercentage =
-      totalAnswered > 0 ? (totalCorrect / totalAnswered) * 100 : 0;
+      answersData.length > 0
+        ? (fullyCorrectQuestions / answersData.length) * 100
+        : 0;
 
     // Update quizAttempt with final stats
     quizAttempt.score = totalScore;
@@ -392,18 +422,15 @@ export class QuestionsService {
     });
   }
 
-async getAllUserQuizAttempts(): Promise<UserQuizAttempt[]> {
-  try {
-    const data = await this.userQuizAttemptRepository.find({
-      relations: ['user', 'assessment', 'answers'], // Check if any of these are causing it
-    });
-    return data;
-  } catch (error) {
-    console.error('❌ Error loading quiz attempts:', error);
-    throw new InternalServerErrorException('Failed to load quiz attempts');
+  async getAllUserQuizAttempts(): Promise<UserQuizAttempt[]> {
+    try {
+      const data = await this.userQuizAttemptRepository.find({
+        relations: ['user', 'assessment', 'answers'], // Check if any of these are causing it
+      });
+      return data;
+    } catch (error) {
+      console.error('❌ Error loading quiz attempts:', error);
+      throw new InternalServerErrorException('Failed to load quiz attempts');
+    }
   }
-}
-
-
-
 }

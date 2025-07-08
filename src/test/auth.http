@@ -1,16 +1,16 @@
-POST http://localhost:3000/users/create
-Content-Type: application/json
+# POST http://localhost:3000/users/create
+# Content-Type: application/json
 
-{
-  "username": "Sopheap",
-  "email": "sopheap1234@gmail.com",
-  "password": "sopheap1234",
-  "role": "admin"
-}
+# {
+#   "username": "pheap",
+#   "email": "pheap123@gmail.com",
+#   "password": "pheap123",
+#   "role": "user"
+# }
 
 # DELETE http://localhost:3000/users/1
 
-# PUT http://localhost:3000/users/1
+# PUT http://localhost:3000/users/25
 # Content-Type: application/json
 
 # {
@@ -75,7 +75,7 @@ Content-Type: application/json
 
 # {
 #   "question_text": "Which of these technologies rely on AI? (Select all that apply)?",
-#   "assessment_id": 5, 
+#   "assessment_id": 19, 
 #     "points": 1,
 #   "options": [
 #     { "option_text": " Autonomous vehicles ", "is_correct": true },
@@ -86,6 +86,25 @@ Content-Type: application/json
 #   "is_multiple_choice": true,
 #   "is_yes_no": false
 # }
+
+### Update Question ID 130 (Multiple Choice)
+PUT http://localhost:3000/questions/130
+Content-Type: application/json
+
+{
+  "question_text": "Which of these are AI-powered technologieshihi?",
+  "points": 2,
+  "is_multiple_choice": true,
+  "is_yes_no": false,
+  "options": [
+    { "option_text": "Autonomous drones", "is_correct": true },
+    { "option_text": "Voice assistants", "is_correct": true },
+    { "option_text": "Microwave ovens", "is_correct": false },
+    { "option_text": "Smart cameras", "is_correct": true }
+  ]
+}
+
+
 ### Create an easy question
 # POST http://localhost:3000/questions
 # Content-Type: application/json
@@ -174,12 +193,12 @@ Content-Type: application/json
 #   "user_id": 1
 # }
 
-# PUT http://localhost:3000/questions/7
+# PUT http://localhost:3000/questions/129
 # Content-Type: application/json
 
 # {
 #   "question_text": "What color is the sky on a clear day?",
-#   "assessment_id": 5,
+#   "assessment_id": 19,
 #   "points": 2,
 #   "is_multiple_choice": false,
 #   "is_yes_no": false,

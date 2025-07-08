@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, Delete,Put } from '@nestjs/common';
 import { QuestionsService } from './question.service';
 import { CreateQuestionDto } from './dtos/create_question.dto';
 import { SubmitAnswerDto } from './dtos/submit_answer.dto';
@@ -21,6 +21,8 @@ export class QuestionsController {
     return this.questionsService.create(createQuestionDto);
   }
 
+  @Put(':id')
+  @UsePipes(new ValidationPipe({ transform: true }))
   async updateQuestion(
     @Param('id') id: number,
     @Body() updateData: Partial<CreateQuestionDto>,
